@@ -55,6 +55,7 @@ Daybreak Cockpit operates in two interchangeable modes behind a single unified i
 | `/rules` | `RulesView.tsx` | Active rulebook, 24-hour visual quiet-hours timeline, copyable `rules set` commands. |
 | `/audit` | `AuditTrail.tsx` | SHA-256 action digest inspector, idempotency marker explainer, JSON export. |
 | `/scoreboard` | `Scoreboard.tsx` | Weekly engineering velocity KPIs, transparent standup minutes saved math. |
+| `/simulator` | `SwitchSimulator.tsx` | Interactive simulation of the Switch #daybreak channel and multi-agent reactions. |
 | `/architecture`| `HowItWorks.tsx` | Interactive multi-agent architecture map and daily pipeline phase walkthrough. |
 | `/health` | `SystemHealth.tsx` | Live diagnostic checklist from `daybreak doctor` with remediation guides. |
 
