@@ -4,6 +4,10 @@
 
 **Flip the Switch Hackathon · Track 1: Best Business Workflow**
 
+> 🚀 **Live Companion Dashboard**: [https://web-tan-sigma-02y10rnhyp.vercel.app](https://web-tan-sigma-02y10rnhyp.vercel.app)  
+> 📺 **Pitch &amp; Demo Presentation**: [Canva Presentation](https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/view)  
+> 📖 **Editorial Blog**: [Read the Story (`blog/`)](blog/)
+
 ---
 
 ## The Problem
@@ -85,7 +89,7 @@ flowchart TD
 ## One-Command Setup
 
 ```bash
-git clone https://github.com/aditya1981/Flip-the-Switch.git
+git clone https://github.com/Arryan21-06/Flip-the-Switch.git
 cd Flip-the-Switch
 make setup        # Verifies Python 3.11+, creates .venv, installs pytest, initializes state/
 ```

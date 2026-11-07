@@ -26,6 +26,7 @@ Daybreak is a standup-zero workflow automation system built for engineering team
 
 ## Submission Links
 
-- **Repository**: [https://github.com/Arryan21-06/Flip-the-Switch](https://github.com/Arryan21-06/Flip-the-Switch) (also mirrored at [aditya1981/Flip-the-Switch](https://github.com/aditya1981/Flip-the-Switch))
+- **Repository**: [https://github.com/Arryan21-06/Flip-the-Switch](https://github.com/Arryan21-06/Flip-the-Switch)
 - **Live Companion Dashboard (Vercel)**: [https://web-tan-sigma-02y10rnhyp.vercel.app](https://web-tan-sigma-02y10rnhyp.vercel.app)
-- **Demo Video (3 Minutes)**: `[INSERT DEMO VIDEO LINK HERE]`
+- **Demo Video & Pitch Presentation**: [Canva Presentation](https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/view) (Editor: [https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/edit?ui=e30](https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/edit?ui=e30))
+- **Editorial Blog**: Included in repository under [`blog/`](../blog/) and deployed via GitHub Pages
