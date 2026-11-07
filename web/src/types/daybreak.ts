@@ -198,7 +198,7 @@ export interface Ledger {
 
 export interface DoctorCheck {
   message: string;
-  status: 'PASS' | 'FAIL';
+  status: 'PASS' | 'FAIL' | 'INFO';
 }
 
 export interface DoctorResult {

@@ -56,13 +56,13 @@ export const AuditTrail: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-xs font-mono text-accent-amber mb-1">
             <History className="h-3.5 w-3.5" />
-            <span>STANDUP ZERO · CRYPTOGRAPHIC AUDIT LEDGER</span>
+            <span>STANDUP ZERO · AUDIT LEDGER</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-            Immutable Audit Trail
+            Append-Only Audit Trail
           </h1>
           <p className="text-sm text-text-secondary mt-1">
-            Cryptographically sealed human decisions, SHA-256 action digests, and write execution log.
+            Recorded human decisions, SHA-256 action digest checks, and write execution log.
           </p>
         </div>
 

@@ -39,8 +39,8 @@ export const HowItWorks: React.FC = () => {
       title: 'Agent: Clerk',
       subtitle: 'Gatekeeper, ledger keeper & executor',
       description:
-        'Clerk parses human approval commands (e.g. approve 1 5). It verifies the cryptographic SHA-256 action digest against the proposal contents, checks quiet hours and daily nudge limits, logs write-ahead markers, executes authorized GitHub actions, and records the immutable outcome.',
-      invariant: 'Cryptographic binding: actions executed must strictly match the SHA-256 digest approved by the human.',
+        'Clerk parses human approval commands (e.g. approve 1 5). It verifies the SHA-256 action digest against the proposal contents, checks quiet hours and daily nudge limits, logs write-ahead markers, executes authorized GitHub actions, and records the append-only local ledger outcome.',
+      invariant: 'Action digest binding: actions executed must strictly match the SHA-256 digest approved by the human.',
     },
     toolkit: {
       title: 'Python Daybreak Toolkit',
@@ -273,7 +273,7 @@ export const HowItWorks: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
           <div className="p-4 rounded-xl bg-surface-2/50 border border-border space-y-2">
-            <span className="font-mono text-xs font-bold text-accent-amber">Phase 1 · 04:00 AM</span>
+            <span className="font-mono text-xs font-bold text-accent-amber">Phase 1 · 09:30 IST (04:00 UTC)</span>
             <h3 className="font-bold text-text-primary">Collect Snapshot</h3>
             <p className="text-text-muted leading-relaxed">
               Daybreak collects a read-only repository snapshot via <code className="font-mono">gh</code>. Extracts PRs, issues, checks, and review activity.
@@ -300,7 +300,7 @@ export const HowItWorks: React.FC = () => {
             <span className="font-mono text-xs font-bold text-status-success">Phase 4 · Safe Execution</span>
             <h3 className="font-bold text-text-primary">Clerk Audit & Write</h3>
             <p className="text-text-muted leading-relaxed">
-              Clerk cryptographically verifies digests, enforces daily nudge budgets, posts comments with idempotence tags, and commits to the ledger.
+              Clerk verifies SHA-256 action digests, enforces daily nudge budgets, posts comments with idempotence tags, and commits to the local append-only ledger.
             </p>
           </div>
         </div>

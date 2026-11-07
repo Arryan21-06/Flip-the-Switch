@@ -136,7 +136,7 @@ export const Scoreboard: React.FC = () => {
             <strong>Assumption Formula:</strong> <code className="font-mono text-accent-amber font-bold">{assumption}</code>
           </p>
           <p>
-            Rather than holding a synchronous 15-minute meeting where engineers recite status updates, Daybreak Scribe automatically drafts the brief at 04:00 AM with 100% verifiable Git links.
+            Rather than holding a synchronous 15-minute meeting where engineers recite status updates, Daybreak Scribe automatically drafts the brief at 09:30 IST (04:00 UTC) with 100% verifiable Git links.
           </p>
           <div className="p-3 rounded-lg bg-surface-2 font-mono text-text-primary text-[11px] border border-border">
             5 team members × 15 min standup × 1 observed day = <strong className="text-status-success">75 engineer-minutes returned</strong>

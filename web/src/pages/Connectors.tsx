@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Search,
   AlertCircle,
+  ShieldCheck,
 } from 'lucide-react';
 import { useDaybreakData } from '../data/source';
 
@@ -11,89 +12,120 @@ interface ConnectorItem {
   category: string;
   description: string;
   status: string;
-  connected: boolean;
+  statusBadge: string;
+  statusColor: string;
   iconBg: string;
-  badge?: string;
 }
 
 export const Connectors: React.FC = () => {
   const { data } = useDaybreakData();
   const [searchQuery, setSearchQuery] = useState('');
-  const [connectorsState, setConnectorsState] = useState<Record<string, boolean>>({
-    github: true,
-    switch: true,
-    mattermost: true,
-    atlassian: false,
-    datadog: false,
-    google: false,
-  });
 
-  const repo = data.analysis.meta.repo;
+  const checks = data.doctor.checks || [];
+  const ghCheck = checks.find((c) => c.message.includes('gh installed and authenticated'));
+  const repoCheck = checks.find((c) => c.message.includes('DAYBREAK_REPO readable'));
+  const webhookCheck = checks.find((c) => c.message.includes('MATTERMOST_WEBHOOK_URL'));
+
+  // Derive GitHub status honestly from doctor checks
+  let githubStatus = 'Unknown (not checked)';
+  let githubBadge = 'Unknown';
+  let githubColor = 'bg-surface-3 text-text-muted border-border';
+
+  if (ghCheck && repoCheck) {
+    if (ghCheck.status === 'PASS' && repoCheck.status === 'PASS') {
+      githubStatus = `Connected: ${data.analysis.meta.repo}`;
+      githubBadge = 'Connected';
+      githubColor = 'bg-status-success/15 text-status-success border-status-success/30';
+    } else {
+      githubStatus = `Disconnected (${repoCheck.status === 'FAIL' ? 'repo unset or unreadable' : 'gh auth missing'})`;
+      githubBadge = 'Disconnected';
+      githubColor = 'bg-status-danger/15 text-status-danger border-status-danger/30';
+    }
+  }
+
+  // Derive Webhook status honestly
+  let webhookStatus = 'Unknown (not checked)';
+  let webhookBadge = 'Unknown';
+  let webhookColor = 'bg-surface-3 text-text-muted border-border';
+
+  if (webhookCheck) {
+    if (webhookCheck.status === 'PASS') {
+      webhookStatus = 'Webhook configured & valid';
+      webhookBadge = 'Configured';
+      webhookColor = 'bg-status-success/15 text-status-success border-status-success/30';
+    } else if (webhookCheck.status === 'INFO') {
+      webhookStatus = 'Not configured (optional)';
+      webhookBadge = 'Optional';
+      webhookColor = 'bg-surface-3 text-text-muted border-border';
+    } else {
+      webhookStatus = 'Invalid webhook URL format';
+      webhookBadge = 'Invalid';
+      webhookColor = 'bg-status-danger/15 text-status-danger border-status-danger/30';
+    }
+  }
 
   const connectors: ConnectorItem[] = [
     {
+      id: 'github',
+      name: 'GitHub',
+      category: 'Source control',
+      description: githubStatus,
+      status: 'Derived from daybreak doctor',
+      statusBadge: githubBadge,
+      statusColor: githubColor,
+      iconBg: 'bg-[#24292E]',
+    },
+    {
+      id: 'switch',
+      name: 'Switch Room Agents',
+      category: 'Multi-agent orchestration',
+      description: 'Template: switch/room-template.yaml (Scribe, Sentinel, Clerk)',
+      status: 'Requires Switch Console GUI import',
+      statusBadge: 'Template Ready',
+      statusColor: 'bg-status-info/15 text-status-info border-status-info/30',
+      iconBg: 'bg-status-success',
+    },
+    {
+      id: 'mattermost',
+      name: 'Mattermost Standup Webhook',
+      category: 'Team chat bridge',
+      description: webhookStatus,
+      status: 'Derived from MATTERMOST_WEBHOOK_URL',
+      statusBadge: webhookBadge,
+      statusColor: webhookColor,
+      iconBg: 'bg-[#0058CC]',
+    },
+    {
       id: 'atlassian',
-      name: 'Atlassian',
+      name: 'Atlassian Jira',
       category: 'Project management',
-      description: 'Nobody has connected it yet',
-      status: 'Available · Jira & Confluence',
-      connected: connectorsState.atlassian,
-      iconBg: 'bg-[#0052CC]',
+      description: 'Not used by Daybreak (Daybreak reads GitHub activity directly)',
+      status: 'Not integrated',
+      statusBadge: 'Not used by Daybreak',
+      statusColor: 'bg-surface-3 text-text-muted border-border',
+      iconBg: 'bg-[#0052CC]/50',
     },
     {
       id: 'datadog',
       name: 'Datadog',
       category: 'Observability',
-      description: 'Nobody has connected it yet',
-      status: 'Available · Metrics & APM',
-      connected: connectorsState.datadog,
-      iconBg: 'bg-[#632CA6]',
-    },
-    {
-      id: 'github',
-      name: 'GitHub',
-      category: 'Source control',
-      description: `Connected: ${repo}`,
-      status: 'Active · Read-only audit mode',
-      connected: connectorsState.github,
-      iconBg: 'bg-[#24292E]',
-      badge: 'ALLOW_WRITE=0',
+      description: 'Not used by Daybreak',
+      status: 'Not integrated',
+      statusBadge: 'Not used by Daybreak',
+      statusColor: 'bg-surface-3 text-text-muted border-border',
+      iconBg: 'bg-[#632CA6]/50',
     },
     {
       id: 'google',
       name: 'Google Workspace',
       category: 'Productivity',
-      description: 'Nobody has connected it yet',
-      status: 'Available · Docs, Sheets & Gmail',
-      connected: connectorsState.google,
-      iconBg: 'bg-[#4285F4]',
-    },
-    {
-      id: 'switch',
-      name: 'Switch Console & Agents',
-      category: 'Agent runtime',
-      description: 'Connected: Scribe, Sentinel, Clerk in #daybreak',
-      status: 'Active · Local Switch server',
-      connected: connectorsState.switch,
-      iconBg: 'bg-status-success',
-      badge: 'Room #daybreak',
-    },
-    {
-      id: 'mattermost',
-      name: 'Mattermost Standup Channel',
-      category: 'Team chat & webhooks',
-      description: 'Incoming webhook configured for 09:30 IST standup brief',
-      status: 'Active · Standup Zero',
-      connected: connectorsState.mattermost,
-      iconBg: 'bg-[#0058CC]',
-      badge: 'Webhook Ready',
+      description: 'Not used by Daybreak',
+      status: 'Not integrated',
+      statusBadge: 'Not used by Daybreak',
+      statusColor: 'bg-surface-3 text-text-muted border-border',
+      iconBg: 'bg-[#4285F4]/50',
     },
   ];
-
-  const toggleConnector = (id: string) => {
-    // Read-only safety notice: show state change in UI
-    setConnectorsState((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
 
   const filtered = connectors.filter((c) => {
     const q = searchQuery.toLowerCase();
@@ -106,17 +138,21 @@ export const Connectors: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Page Title & Subtitle matching Switch screenshot */}
+      {/* Header */}
       <div className="space-y-1">
+        <div className="flex items-center gap-2 text-xs font-mono text-accent-amber mb-1">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          <span>DAYBREAK COCKPIT · INTEGRATION STATUS</span>
+        </div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
-          Connectors
+          Connectors & Services
         </h1>
         <p className="text-sm text-text-secondary">
-          Choose which services people in Default can connect and give to their agents.
+          Live connection states derived from <code className="font-mono text-text-primary">daybreak doctor</code> and runtime environment.
         </p>
       </div>
 
-      {/* Search Bar matching Switch screenshot */}
+      {/* Search Bar */}
       <div className="space-y-2">
         <div className="relative max-w-xl">
           <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
@@ -124,25 +160,21 @@ export const Connectors: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name or category"
+            placeholder="Filter services by name or category"
             className="w-full pl-9 pr-4 py-2 rounded-lg bg-[#18191B] border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-border-strong transition-colors"
           />
         </div>
-        <p className="text-xs text-text-muted">
-          Turning a service off takes it from every agent within a minute. Turning it back on restores their access.
-        </p>
       </div>
 
-      {/* Grid of Switch Connector Cards matching Switch screenshot */}
+      {/* Grid of Cards with Read-Only Status Pills */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.map((item) => (
           <div
             key={item.id}
-            className="p-5 rounded-xl bg-[#161719] border border-border hover:border-border-strong transition-all flex items-center justify-between gap-4"
+            className="p-5 rounded-xl bg-[#161719] border border-border flex items-center justify-between gap-4"
           >
             {/* Left Icon and Details */}
             <div className="flex items-center gap-3.5 min-w-0">
-              {/* App Icon Box */}
               <div
                 className={`h-11 w-11 rounded-lg ${item.iconBg} flex items-center justify-center text-white shrink-0 shadow-xs border border-white/10`}
               >
@@ -172,17 +204,11 @@ export const Connectors: React.FC = () => {
                 )}
               </div>
 
-              {/* Text Info */}
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <h2 className="text-sm font-semibold text-text-primary truncate">
                     {item.name}
                   </h2>
-                  {item.badge && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-3 text-status-success border border-status-success/30 font-semibold">
-                      {item.badge}
-                    </span>
-                  )}
                 </div>
                 <div className="text-xs text-text-secondary truncate mt-0.5">
                   {item.category}
@@ -193,37 +219,25 @@ export const Connectors: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Toggle Switch matching Switch screenshot */}
-            <button
-              type="button"
-              onClick={() => toggleConnector(item.id)}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                item.connected ? 'bg-status-success' : 'bg-surface-3'
-              }`}
-              role="switch"
-              aria-checked={item.connected}
-              title={item.connected ? 'Enabled' : 'Disabled'}
+            {/* Read-Only Status Pill */}
+            <span
+              className={`text-xs font-mono font-medium px-2.5 py-1 rounded-md border shrink-0 ${item.statusColor}`}
             >
-              <span
-                aria-hidden="true"
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                  item.connected ? 'translate-x-5' : 'translate-x-0'
-                }`}
-              />
-            </button>
+              {item.statusBadge}
+            </span>
           </div>
         ))}
       </div>
 
-      {/* Bottom Information Card */}
+      {/* Honest Disclaimer Card */}
       <div className="p-4 rounded-xl border border-border bg-[#141517] text-xs text-text-secondary flex items-start gap-3">
         <AlertCircle className="h-4 w-4 text-accent-amber shrink-0 mt-0.5" />
         <div className="space-y-1">
           <div className="font-semibold text-text-primary">
-            Daybreak Governance Guardrails
+            Honest Read-Only Cockpit Guarantee
           </div>
           <div>
-            The GitHub and Switch connectors are pre-configured to operate in read-only observation mode with <code className="font-mono text-accent-amber font-bold">DAYBREAK_ALLOW_WRITE=0</code>. All outbound human comments and review requests remain strictly gated behind recorded typed room approvals.
+            The dashboard reads actual diagnostic states from your machine. No write actions or toggles are enabled from the browser.
           </div>
         </div>
       </div>

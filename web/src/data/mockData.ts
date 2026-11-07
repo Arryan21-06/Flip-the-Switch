@@ -397,7 +397,7 @@ export const DEMO_BRIEF: BriefData = {
       "open_prs": [
         {
           "number": 39,
-          "title": "Work item 39",
+          "title": "Prometheus latency histogram metrics",
           "url": "https://github.com/acme/shop/pull/39"
         }
       ],
@@ -414,24 +414,24 @@ export const DEMO_BRIEF: BriefData = {
       "open_prs": [
         {
           "number": 46,
-          "title": "Work item 46",
+          "title": "Refactor order processing worker",
           "url": "https://github.com/acme/shop/pull/46"
         },
         {
           "number": 54,
-          "title": "Work item 54",
+          "title": "Flaky auth integration tests",
           "url": "https://github.com/acme/shop/pull/54"
         }
       ],
       "opened": [
         {
           "number": 46,
-          "title": "Work item 46",
+          "title": "Refactor order processing worker",
           "url": "https://github.com/acme/shop/pull/46"
         },
         {
           "number": 54,
-          "title": "Work item 54",
+          "title": "Flaky auth integration tests",
           "url": "https://github.com/acme/shop/pull/54"
         }
       ],
@@ -447,24 +447,24 @@ export const DEMO_BRIEF: BriefData = {
       "open_prs": [
         {
           "number": 45,
-          "title": "Work item 45",
+          "title": "Migrate cart storage to Redis",
           "url": "https://github.com/acme/shop/pull/45"
         },
         {
           "number": 53,
-          "title": "Work item 53",
+          "title": "Product cache memory leak fix",
           "url": "https://github.com/acme/shop/pull/53"
         }
       ],
       "opened": [
         {
           "number": 45,
-          "title": "Work item 45",
+          "title": "Migrate cart storage to Redis",
           "url": "https://github.com/acme/shop/pull/45"
         },
         {
           "number": 53,
-          "title": "Work item 53",
+          "title": "Product cache memory leak fix",
           "url": "https://github.com/acme/shop/pull/53"
         }
       ],
@@ -507,14 +507,14 @@ export const DEMO_BRIEF: BriefData = {
         },
         {
           "number": 48,
-          "title": "Work item 48",
+          "title": "Payment gateway webhook handling",
           "url": "https://github.com/acme/shop/pull/48"
         }
       ],
       "opened": [
         {
           "number": 48,
-          "title": "Work item 48",
+          "title": "Payment gateway webhook handling",
           "url": "https://github.com/acme/shop/pull/48"
         }
       ],
@@ -542,17 +542,17 @@ export const DEMO_BRIEF: BriefData = {
       "open_prs": [
         {
           "number": 47,
-          "title": "Work item 47",
+          "title": "Billing API idempotency keys",
           "url": "https://github.com/acme/shop/pull/47"
         },
         {
           "number": 49,
-          "title": "Work item 49",
+          "title": "Upgrade Stripe SDK dependency",
           "url": "https://github.com/acme/shop/pull/49"
         },
         {
           "number": 50,
-          "title": "Work item 50",
+          "title": "Webhook signature verification",
           "url": "https://github.com/acme/shop/pull/50"
         },
         {

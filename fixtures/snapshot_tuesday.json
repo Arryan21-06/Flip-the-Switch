@@ -58,7 +58,7 @@
     },
     {
       "number": 44,
-      "title": "Work item 44",
+      "title": "Checkout session timeout fix",
       "url": "https://github.com/acme/shop/pull/44",
       "author": "priya",
       "state": "open",
@@ -81,7 +81,7 @@
     },
     {
       "number": 48,
-      "title": "Work item 48",
+      "title": "Payment gateway webhook handling",
       "url": "https://github.com/acme/shop/pull/48",
       "author": "priya",
       "state": "open",
@@ -109,7 +109,7 @@
     },
     {
       "number": 45,
-      "title": "Work item 45",
+      "title": "Migrate cart storage to Redis",
       "url": "https://github.com/acme/shop/pull/45",
       "author": "meera",
       "state": "open",
@@ -137,7 +137,7 @@
     },
     {
       "number": 39,
-      "title": "Work item 39",
+      "title": "Prometheus latency histogram metrics",
       "url": "https://github.com/acme/shop/pull/39",
       "author": "arjun",
       "state": "open",
@@ -166,7 +166,7 @@
     },
     {
       "number": 46,
-      "title": "Work item 46",
+      "title": "Refactor order processing worker",
       "url": "https://github.com/acme/shop/pull/46",
       "author": "lead",
       "state": "open",
@@ -194,7 +194,7 @@
     },
     {
       "number": 47,
-      "title": "Work item 47",
+      "title": "Billing API idempotency keys",
       "url": "https://github.com/acme/shop/pull/47",
       "author": "sam",
       "state": "open",
@@ -222,7 +222,7 @@
     },
     {
       "number": 49,
-      "title": "Work item 49",
+      "title": "Upgrade Stripe SDK dependency",
       "url": "https://github.com/acme/shop/pull/49",
       "author": "sam",
       "state": "open",
@@ -250,7 +250,7 @@
     },
     {
       "number": 50,
-      "title": "Work item 50",
+      "title": "Webhook signature verification",
       "url": "https://github.com/acme/shop/pull/50",
       "author": "sam",
       "state": "open",
@@ -301,7 +301,7 @@
     },
     {
       "number": 53,
-      "title": "Work item 53",
+      "title": "Product cache memory leak fix",
       "url": "https://github.com/acme/shop/pull/53",
       "author": "meera",
       "state": "open",
@@ -324,7 +324,7 @@
     },
     {
       "number": 54,
-      "title": "Work item 54",
+      "title": "Flaky auth integration tests",
       "url": "https://github.com/acme/shop/pull/54",
       "author": "lead",
       "state": "open",
@@ -352,7 +352,7 @@
     },
     {
       "number": 55,
-      "title": "Work item 55",
+      "title": "Database connection pool tuning",
       "url": "https://github.com/acme/shop/pull/55",
       "author": "lead",
       "state": "open",

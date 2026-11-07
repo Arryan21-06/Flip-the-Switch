@@ -6,6 +6,7 @@ import {
   AlertTriangle,
   RefreshCw,
   Terminal,
+  Info,
 } from 'lucide-react';
 import { useDaybreakData } from '../data/source';
 import { SpotlightCard } from '../components/reactbits/SpotlightCard';
@@ -115,8 +116,10 @@ export const SystemHealth: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
-                        isPass
+                        check.status === 'PASS'
                           ? 'bg-status-success/15 text-status-success border-status-success/30'
+                          : check.status === 'INFO'
+                          ? 'bg-status-info/15 text-status-info border-status-info/30'
                           : 'bg-status-danger/15 text-status-danger border-status-danger/30'
                       }`}
                     >
@@ -136,8 +139,10 @@ export const SystemHealth: React.FC = () => {
                 </div>
 
                 <div className="shrink-0">
-                  {isPass ? (
+                  {check.status === 'PASS' ? (
                     <CheckCircle2 className="h-4 w-4 text-status-success" />
+                  ) : check.status === 'INFO' ? (
+                    <Info className="h-4 w-4 text-status-info" />
                   ) : (
                     <XCircle className="h-4 w-4 text-status-danger" />
                   )}

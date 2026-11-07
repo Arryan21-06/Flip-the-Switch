@@ -3,9 +3,7 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import {
   Home,
   Bot,
-  Hash,
   Plug2,
-  LayoutTemplate,
   Shield,
   ArrowLeft,
   ArrowRight,
@@ -90,7 +88,7 @@ export const Shell: React.FC = () => {
       case '/connectors':
         return 'Connectors';
       case '/simulator':
-        return 'Switch Room Simulator';
+        return 'Room Simulator (not Switch)';
       case '/brief':
         return 'Morning Standup Brief';
       case '/proposals':
@@ -115,10 +113,10 @@ export const Shell: React.FC = () => {
   return (
     <div className="min-h-screen bg-surface-0 text-text-primary flex font-sans antialiased selection:bg-accent-coral/30 selection:text-white">
       {/* ============================================================ */}
-      {/* 1. PRIMARY SWITCH SIDEBAR (Exact match to Switch Console)   */}
+      {/* 1. PRIMARY SIDEBAR (Daybreak Cockpit Navigation)            */}
       {/* ============================================================ */}
       <aside className="hidden xl:flex flex-col w-56 shrink-0 border-r border-border bg-[#111214] select-none text-sm z-30">
-        {/* Top Controls: Back/Forward and Sidebar Toggle */}
+        {/* Top Controls */}
         <div className="h-10 px-3 flex items-center justify-between text-text-muted border-b border-border/40">
           <div className="flex items-center gap-2">
             <button
@@ -140,26 +138,26 @@ export const Shell: React.FC = () => {
             type="button"
             onClick={() => setIsSubNavCollapsed(!isSubNavCollapsed)}
             className="p-1 rounded hover:bg-surface-3 hover:text-text-primary transition-colors"
-            title="Toggle secondary panel"
+            title="Toggle secondary drawer"
           >
             <PanelLeft className="h-3.5 w-3.5" />
           </button>
         </div>
 
-        {/* Server & Workspace Selector Dropdown Card */}
+        {/* Workspace Brand / Header */}
         <div className="p-2 border-b border-border/40">
-          <div className="flex items-center justify-between p-2 rounded-lg bg-surface-2/60 hover:bg-surface-2 cursor-pointer transition-colors border border-border/50">
+          <div className="flex items-center justify-between p-2 rounded-lg bg-surface-2/60 border border-border/50">
             <div className="flex items-center gap-2.5">
-              <div className="h-7 w-7 rounded-md bg-status-success/20 text-status-success border border-status-success/30 flex items-center justify-center font-bold text-xs">
-                L
+              <div className="h-7 w-7 rounded-md bg-accent-amber/20 text-accent-amber border border-accent-amber/30 flex items-center justify-center font-bold text-xs font-mono">
+                DB
               </div>
               <div className="leading-tight">
                 <div className="font-semibold text-xs text-text-primary">
-                  Local Switch server
+                  Daybreak Cockpit
                 </div>
                 <div className="flex items-center gap-1 text-[11px] text-text-muted">
                   <span className="h-1.5 w-1.5 rounded-full bg-status-success" />
-                  <span>This computer</span>
+                  <span>Standup Zero</span>
                 </div>
               </div>
             </div>
@@ -167,7 +165,7 @@ export const Shell: React.FC = () => {
           </div>
         </div>
 
-        {/* Primary Switch Navigation Menu */}
+        {/* Primary Navigation Menu */}
         <div className="p-2 space-y-0.5 border-b border-border/40 text-xs">
           <NavLink
             to="/"
@@ -181,7 +179,7 @@ export const Shell: React.FC = () => {
           >
             <div className="flex items-center gap-2.5">
               <Home className="h-4 w-4 text-text-muted" />
-              <span>Home</span>
+              <span>Mission Control</span>
             </div>
           </NavLink>
 
@@ -197,9 +195,9 @@ export const Shell: React.FC = () => {
           >
             <div className="flex items-center gap-2.5">
               <Bot className="h-4 w-4 text-text-muted" />
-              <span>Your Agents</span>
+              <span>Room Simulator</span>
             </div>
-            <span className="text-[10px] font-mono text-status-success">3</span>
+            <span className="text-[10px] font-mono px-1 rounded bg-surface-3 text-accent-amber">Sim</span>
           </NavLink>
 
           <NavLink
@@ -213,10 +211,30 @@ export const Shell: React.FC = () => {
             }
           >
             <div className="flex items-center gap-2.5">
-              <Hash className="h-4 w-4 text-text-muted" />
-              <span>Your Rooms</span>
+              <Newspaper className="h-4 w-4 text-text-muted" />
+              <span>Standup Brief</span>
             </div>
-            <span className="text-[10px] font-mono text-text-muted">#daybreak</span>
+          </NavLink>
+
+          <NavLink
+            to="/proposals"
+            className={({ isActive }) =>
+              `flex items-center justify-between px-2.5 py-1.5 rounded-md transition-colors ${
+                isActive
+                  ? 'bg-surface-3 text-text-primary font-medium'
+                  : 'text-text-secondary hover:bg-surface-2 hover:text-text-primary'
+              }`
+            }
+          >
+            <div className="flex items-center gap-2.5">
+              <CheckSquare className="h-4 w-4 text-text-muted" />
+              <span>Proposals Queue</span>
+            </div>
+            {pendingCount > 0 && (
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-accent-coral/20 text-accent-coral border border-accent-coral/30">
+                {pendingCount}
+              </span>
+            )}
           </NavLink>
 
           <NavLink
@@ -233,23 +251,6 @@ export const Shell: React.FC = () => {
               <Plug2 className="h-4 w-4 text-text-muted" />
               <span>Connectors</span>
             </div>
-            <span className="h-1.5 w-1.5 rounded-full bg-status-success" />
-          </NavLink>
-
-          <NavLink
-            to="/architecture"
-            className={({ isActive }) =>
-              `flex items-center justify-between px-2.5 py-1.5 rounded-md transition-colors ${
-                isActive
-                  ? 'bg-surface-3 text-text-primary font-medium'
-                  : 'text-text-secondary hover:bg-surface-2 hover:text-text-primary'
-              }`
-            }
-          >
-            <div className="flex items-center gap-2.5">
-              <LayoutTemplate className="h-4 w-4 text-text-muted" />
-              <span>Templates</span>
-            </div>
           </NavLink>
 
           <NavLink
@@ -264,30 +265,27 @@ export const Shell: React.FC = () => {
           >
             <div className="flex items-center gap-2.5">
               <Shield className="h-4 w-4 text-text-muted" />
-              <span>Admin</span>
+              <span>System Health</span>
             </div>
-            <span className="h-1.5 w-1.5 rounded-full bg-status-success" />
+            <span
+              className={`text-[10px] font-mono px-1 rounded border ${
+                data.doctor.passed
+                  ? 'bg-status-success/20 text-status-success border-status-success/30'
+                  : 'bg-status-danger/20 text-status-danger border-status-danger/30'
+              }`}
+            >
+              {data.doctor.passed ? 'PASS' : 'FAIL'}
+            </span>
           </NavLink>
         </div>
 
-        {/* Tab Segment: Agents / Rooms */}
+        {/* Daybreak Multi-Agent Roster */}
         <div className="p-2 border-b border-border/40">
           <div className="flex items-center justify-between text-xs mb-2 px-1">
-            <div className="inline-flex rounded-lg bg-surface-2 p-0.5 border border-border/60">
-              <button
-                type="button"
-                className="px-2 py-0.5 rounded-md bg-surface-3 text-text-primary font-medium text-[11px]"
-              >
-                Agents
-              </button>
-              <button
-                type="button"
-                className="px-2 py-0.5 rounded-md text-text-muted hover:text-text-primary text-[11px]"
-              >
-                Rooms
-              </button>
-            </div>
-            <span className="text-[11px] font-mono text-text-muted">3 active</span>
+            <span className="text-[10px] font-bold font-mono uppercase text-text-muted tracking-wider">
+              DAYBREAK ROLES
+            </span>
+            <span className="text-[10px] font-mono text-text-muted">3 Defined</span>
           </div>
 
           <div className="space-y-1">
@@ -296,21 +294,21 @@ export const Shell: React.FC = () => {
                 <span className="h-1.5 w-1.5 rounded-full bg-accent-amber" />
                 <span className="text-text-primary font-medium">Scribe</span>
               </div>
-              <span className="text-[10px] text-text-muted font-mono">Claude</span>
+              <span className="text-[10px] text-text-muted font-mono">Briefing</span>
             </div>
             <div className="flex items-center justify-between px-2 py-1 rounded-md bg-surface-2/40 text-xs">
               <div className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent-coral" />
                 <span className="text-text-primary font-medium">Sentinel</span>
               </div>
-              <span className="text-[10px] text-text-muted font-mono">Codex</span>
+              <span className="text-[10px] text-text-muted font-mono">Analysis</span>
             </div>
             <div className="flex items-center justify-between px-2 py-1 rounded-md bg-surface-2/40 text-xs">
               <div className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-status-success" />
                 <span className="text-text-primary font-medium">Clerk</span>
               </div>
-              <span className="text-[10px] text-text-muted font-mono">Claude</span>
+              <span className="text-[10px] text-text-muted font-mono">Execution</span>
             </div>
           </div>
         </div>
@@ -318,7 +316,7 @@ export const Shell: React.FC = () => {
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Bottom Sidebar Utility Links */}
+        {/* Bottom Utility Links */}
         <div className="p-2 border-t border-border/40 space-y-0.5 text-xs text-text-secondary">
           <button
             type="button"
@@ -340,7 +338,7 @@ export const Shell: React.FC = () => {
           >
             <div className="flex items-center gap-2.5">
               <Settings className="h-4 w-4 text-text-muted" />
-              <span>Settings</span>
+              <span>Rulebook</span>
             </div>
             <kbd className="text-[10px] font-mono text-text-muted px-1 rounded bg-surface-2 border border-border/40">
               ⌘,
@@ -348,14 +346,14 @@ export const Shell: React.FC = () => {
           </NavLink>
 
           <a
-            href="https://docs.switchagents.ai"
+            href="https://github.com/Arryan21-06/Flip-the-Switch"
             target="_blank"
             rel="noreferrer"
             className="flex items-center justify-between px-2.5 py-1.5 rounded-md hover:bg-surface-2 hover:text-text-primary transition-colors"
           >
             <div className="flex items-center gap-2.5">
               <ExternalLink className="h-4 w-4 text-text-muted" />
-              <span>Docs</span>
+              <span>Repository</span>
             </div>
             <span className="text-[10px] text-text-muted">↗</span>
           </a>
@@ -363,21 +361,21 @@ export const Shell: React.FC = () => {
           <div className="pt-2 px-2.5 flex items-center justify-between text-[11px] text-text-muted border-t border-border/40 font-mono">
             <div className="flex items-center gap-1.5">
               <Terminal className="h-3 w-3" />
-              <span>switch</span>
+              <span>daybreak</span>
             </div>
-            <span>v0.40.1</span>
+            <span>v1.0.0</span>
           </div>
         </div>
       </aside>
 
       {/* ============================================================ */}
-      {/* 2. SECONDARY WORKSPACE SUB-NAV (Exact Switch Sub-sidebar)   */}
+      {/* 2. SECONDARY WORKSPACE SUB-NAV                               */}
       {/* ============================================================ */}
       {!isSubNavCollapsed && (
         <aside className="hidden lg:flex flex-col w-56 shrink-0 border-r border-border bg-[#141517] select-none text-xs z-20">
           <div className="p-3 border-b border-border/40">
             <div className="text-[10px] font-mono uppercase text-text-muted tracking-wider mb-2 font-semibold">
-              WORKSPACE · Daybreak
+              WORKSPACE · {data.analysis.meta.repo}
             </div>
             <div className="space-y-0.5">
               <SubNavLink to="/" icon={LayoutDashboard} label="Mission Control" />
@@ -404,27 +402,25 @@ export const Shell: React.FC = () => {
 
           <div className="p-3 border-b border-border/40 flex-1">
             <div className="text-[10px] font-mono uppercase text-text-muted tracking-wider mb-2 font-semibold">
-              SERVER · Local Switch server
+              RUNTIME & TOOLS
             </div>
             <div className="space-y-0.5">
               <SubNavLink
-                to="/connectors"
-                icon={Plug2}
-                label="Connectors"
-                badge="3 Active"
-                badgeColor="bg-status-success/20 text-status-success border-status-success/30"
-              />
-              <SubNavLink
                 to="/simulator"
                 icon={MessageSquare}
-                label="Switch Room Chat"
-                badge="Active"
-                badgeColor="bg-status-success/20 text-status-success border-status-success/30"
+                label="Room Simulator (not Switch)"
+                badge="Sim"
+                badgeColor="bg-accent-amber/20 text-accent-amber border-accent-amber/30"
+              />
+              <SubNavLink
+                to="/connectors"
+                icon={Plug2}
+                label="Connectors Status"
               />
               <SubNavLink
                 to="/health"
                 icon={ShieldCheck}
-                label="Status & Doctor"
+                label="Diagnostics (doctor)"
                 badge={data.doctor.passed ? 'PASS' : 'FAIL'}
                 badgeColor={
                   data.doctor.passed
@@ -432,7 +428,7 @@ export const Shell: React.FC = () => {
                     : 'bg-status-danger/20 text-status-danger border-status-danger/30'
                 }
               />
-              <SubNavLink to="/architecture" icon={Network} label="Connector Apps" />
+              <SubNavLink to="/architecture" icon={Network} label="System Anatomy" />
             </div>
           </div>
 
@@ -455,29 +451,29 @@ export const Shell: React.FC = () => {
       {/* 3. MAIN CONTENT STAGE                                        */}
       {/* ============================================================ */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Header Bar matching Switch screenshot breadcrumb */}
+        {/* Top Header Bar */}
         <header className="sticky top-0 z-40 border-b border-border bg-[#131416]/95 backdrop-blur-md">
           <div className="px-4 sm:px-6 h-12 flex items-center justify-between gap-4">
             {/* Left: Breadcrumbs */}
             <div className="flex items-center gap-2.5 text-xs">
-              <div className="h-6 w-6 rounded bg-status-success/20 text-status-success border border-status-success/40 flex items-center justify-center font-bold text-xs">
-                D
+              <div className="h-6 w-6 rounded bg-accent-amber/20 text-accent-amber border border-accent-amber/40 flex items-center justify-center font-bold text-xs font-mono">
+                DB
               </div>
               <span className="font-medium text-text-primary">Daybreak</span>
               <span className="text-text-muted">/</span>
-              <span className="font-mono text-text-secondary">#daybreak</span>
+              <span className="font-mono text-text-secondary">{data.analysis.meta.repo}</span>
               <span className="text-text-muted">/</span>
               <span className="font-semibold text-text-primary">
                 {getPageTitle(location.pathname)}
               </span>
             </div>
 
-            {/* Right: Switch Running Indicator, Quiet Hours, Mode Toggle */}
+            {/* Right: Mode Badge & Indicators */}
             <div className="flex items-center gap-3">
-              {/* Running Status Dot matching Switch Screenshot */}
-              <div className="flex items-center gap-1.5 text-xs font-medium text-status-success">
-                <span className="h-2 w-2 rounded-full bg-status-success animate-pulse" />
-                <span>Running</span>
+              {/* Separate Small API Connected Dot */}
+              <div className="flex items-center gap-1.5 text-xs text-text-muted font-mono">
+                <span className="h-2 w-2 rounded-full bg-status-success" />
+                <span className="hidden sm:inline">API connected</span>
               </div>
 
               <div className="h-3.5 w-px bg-border/80 hidden sm:block" />
@@ -486,42 +482,25 @@ export const Shell: React.FC = () => {
               <div className="hidden md:flex items-center gap-1.5 text-xs text-text-muted font-mono">
                 <Clock className="h-3 w-3 text-accent-amber" />
                 <span>
-                  {data.rules.quiet_hours.start}–{data.rules.quiet_hours.end} ({data.rules.timezone})
+                  Quiet hours: {data.rules.quiet_hours.start}–{data.rules.quiet_hours.end} ({data.rules.timezone})
                 </span>
               </div>
 
               <div className="h-3.5 w-px bg-border/80 hidden sm:block" />
 
-              {/* Mode Toggle */}
-              <div className="flex items-center rounded-lg bg-surface-2 p-0.5 border border-border text-xs">
-                <button
-                  type="button"
-                  onClick={() => setMode('demo')}
-                  className={`px-2 py-0.5 rounded transition-all text-xs ${
-                    mode === 'demo'
-                      ? 'bg-accent-amber/20 text-accent-amber font-semibold border border-accent-amber/30'
-                      : 'text-text-muted hover:text-text-primary'
-                  }`}
-                >
-                  Seeded demo data
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMode('live')}
-                  className={`px-2 py-0.5 rounded transition-all text-xs flex items-center gap-1.5 ${
-                    mode === 'live'
-                      ? 'bg-status-success/20 text-status-success font-semibold border border-status-success/30'
-                      : 'text-text-muted hover:text-text-primary'
-                  }`}
-                >
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      mode === 'live' ? 'bg-status-success animate-pulse' : 'bg-text-muted'
-                    }`}
-                  />
-                  Live
-                </button>
-              </div>
+              {/* Honest Mode Badge (ONE badge: Seeded fixture or Live GitHub) */}
+              <button
+                type="button"
+                onClick={() => setMode(mode === 'demo' ? 'live' : 'demo')}
+                title="Click to toggle between seeded fixtures and live API state"
+                className={`px-2.5 py-1 rounded-md text-xs font-mono font-medium border transition-colors ${
+                  mode === 'live'
+                    ? 'bg-status-success/15 text-status-success border-status-success/30'
+                    : 'bg-surface-2 text-text-secondary border-border hover:text-text-primary'
+                }`}
+              >
+                {mode === 'live' ? 'Live GitHub' : 'Seeded fixture'}
+              </button>
 
               {/* Polling Refresh & Elapsed */}
               <div className="hidden lg:flex items-center gap-1.5 text-xs text-text-muted font-mono">

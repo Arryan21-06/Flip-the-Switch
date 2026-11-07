@@ -9,7 +9,6 @@ import {
   ExternalLink,
   MessageSquare,
   GitPullRequest,
-  AlertCircle,
   User,
 } from 'lucide-react';
 import { useDaybreakData, getApproveCommand, getSkipCommand, getSnoozeCommand } from '../data/source';
@@ -23,7 +22,7 @@ export const MissionControl: React.FC = () => {
   const watching = data.analysis.watching || [];
   const pending = proposals.filter((p) => p.status === 'proposed');
   const stuckItems = proposals.filter((p) => p.severity === 'stuck');
-  const warningItems = proposals.filter((p) => p.severity === 'warning');
+  const allWarningProposals = proposals.filter((p) => p.severity === 'warning' || p.type === 'early_warning');
   const executedCount = Object.keys(data.ledger.executed || {}).length;
 
   const allPendingIndices = pending.map((p) => p.index);
@@ -46,7 +45,7 @@ export const MissionControl: React.FC = () => {
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-            Engineering Velocity Dashboard
+            Daybreak Cockpit
           </h1>
 
           <p className="text-xs text-text-secondary">
@@ -74,7 +73,7 @@ export const MissionControl: React.FC = () => {
           {pending.length > 0 && (
             <CopyButton
               command={getApproveCommand(allPendingIndices)}
-              label={`Approve All Pending (${allPendingIndices.length})`}
+              label={`Copy: ${getApproveCommand(allPendingIndices)}`}
               variant="primary"
             />
           )}
@@ -100,15 +99,7 @@ export const MissionControl: React.FC = () => {
               <CountUp to={pending.length} />
             </div>
             <div className="flex items-center gap-1 text-[11px] text-text-muted">
-              {pending.length > 0 ? (
-                <span className="text-accent-coral font-medium flex items-center gap-1">
-                  <AlertCircle className="h-3 w-3" /> Needs room command
-                </span>
-              ) : (
-                <span className="text-status-success font-medium flex items-center gap-1">
-                  <CheckCircle className="h-3 w-3" /> Queue empty
-                </span>
-              )}
+              <span>{pending.length} pending of {proposals.length} flagged</span>
             </div>
           </div>
         </SpotlightCard>
@@ -125,11 +116,11 @@ export const MissionControl: React.FC = () => {
           </div>
           <div>
             <div className="text-3xl font-black text-text-primary mb-1">
-              <CountUp to={warningItems.length + watching.length} />
+              <CountUp to={allWarningProposals.length + watching.length} />
             </div>
             <div className="text-[11px] text-text-muted">
-              <span className="text-accent-amber font-semibold font-mono">{warningItems.length}</span> high risk ·{' '}
-              <span className="text-text-primary font-semibold font-mono">{watching.length}</span> watching
+              <span className="text-accent-amber font-semibold font-mono">{allWarningProposals.length}</span> High ·{' '}
+              <span className="text-text-primary font-semibold font-mono">{watching.length}</span> Watching
             </div>
           </div>
         </SpotlightCard>
@@ -169,7 +160,7 @@ export const MissionControl: React.FC = () => {
               <CountUp to={executedCount} />
             </div>
             <div className="text-[11px] text-status-success font-medium">
-              Sealed in immutable ledger
+              Recorded in append-only local ledger
             </div>
           </div>
         </SpotlightCard>
@@ -356,7 +347,7 @@ export const MissionControl: React.FC = () => {
               </span>
             </div>
             <p className="text-text-muted text-[11px] leading-relaxed">
-              Awaiting human typed command. SHA-256 digest cryptographically verified.
+              Awaiting human typed command. SHA-256 digest checked.
             </p>
           </div>
         </div>

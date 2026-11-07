@@ -74,9 +74,9 @@ def check_allow_write() -> tuple[bool, str]:
         return True, "ALLOW_WRITE flag state: 1 (enabled: live writes permitted)"
     if val == "0":
         return True, "ALLOW_WRITE flag state: 0 (disabled: safe mode)"
-    if val is not None:
-        return False, f"ALLOW_WRITE flag state: invalid value {val!r} (must be 0 or 1)"
-    return False, "ALLOW_WRITE flag state: unset (export DAYBREAK_ALLOW_WRITE=0 or 1)"
+    if val is None or val == "":
+        return True, "ALLOW_WRITE flag state: unset (writes disabled: safe default)"
+    return False, f"ALLOW_WRITE flag state: invalid value {val!r} (must be 0 or 1)"
 
 
 def check_quiet_hours(rules: dict, at_str: str | None = None) -> tuple[bool, str]:
@@ -91,17 +91,17 @@ def check_quiet_hours(rules: dict, at_str: str | None = None) -> tuple[bool, str
         return False, f"Quiet-hours state right now: error evaluating ({exc})"
 
 
-def check_webhook() -> tuple[bool, str]:
+def check_webhook() -> tuple[str, str]:
     url = os.environ.get("MATTERMOST_WEBHOOK_URL", "")
     if url.startswith(("http://", "https://")):
-        return True, "MATTERMOST_WEBHOOK_URL format: valid URL"
+        return "PASS", "MATTERMOST_WEBHOOK_URL format: valid URL"
     if not url:
-        return False, "MATTERMOST_WEBHOOK_URL format: not set"
-    return False, f"MATTERMOST_WEBHOOK_URL format: must start with http:// or https:// (got {url!r})"
+        return "INFO", "MATTERMOST_WEBHOOK_URL format: not set (optional)"
+    return "FAIL", f"MATTERMOST_WEBHOOK_URL format: must start with http:// or https:// (got {url!r})"
 
 
 def inspect(args, rules: dict) -> tuple[list[tuple[str, str]], bool]:
-    checks = [
+    core_checks = [
         check_python(),
         check_gh(),
         check_repo(args.repo),
@@ -109,8 +109,12 @@ def inspect(args, rules: dict) -> tuple[list[tuple[str, str]], bool]:
         check_rules(args.state_dir),
         check_allow_write(),
         check_quiet_hours(rules, args.now),
-        check_webhook(),
     ]
-    all_passed = all(ok for ok, _ in checks)
-    formatted = [(("PASS" if ok else "FAIL"), msg) for ok, msg in checks]
-    return formatted, all_passed
+    wh_status, wh_msg = check_webhook()
+
+    formatted = [(("PASS" if ok else "FAIL"), msg) for ok, msg in core_checks]
+    formatted.append((wh_status, wh_msg))
+
+    # Exit code 3 only for gh auth, repo, state/rules, or invalid critical config
+    critical_passed = all(ok for ok, _ in core_checks) and (wh_status != "FAIL")
+    return formatted, critical_passed

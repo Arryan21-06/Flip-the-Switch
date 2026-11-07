@@ -14,7 +14,7 @@ import { CopyButton } from '../components/CopyButton';
 export const EarlyWarning: React.FC = () => {
   const { data } = useDaybreakData();
   const warningProposals = (data.analysis.proposals || []).filter(
-    (p) => p.severity === 'warning'
+    (p) => p.severity === 'warning' || p.type === 'early_warning'
   );
   const watching = data.analysis.watching || [];
   const rules = data.rules.early_warning;
@@ -34,6 +34,15 @@ export const EarlyWarning: React.FC = () => {
           <p className="text-sm text-text-secondary mt-1">
             Proactive risk flags computed from 3 deterministic signals before work breaches team SLAs.
           </p>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-accent-coral/20 text-accent-coral border border-accent-coral/30">
+            {warningProposals.length} High
+          </span>
+          <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-surface-3 text-text-primary border border-border">
+            {watching.length} Watching
+          </span>
         </div>
       </div>
 

@@ -20,10 +20,15 @@ export const MorningBrief: React.FC = () => {
   // Helper to extract member items
   const getMemberSections = (person: BriefMember) => {
     const yesterday: BriefItem[] = person.yesterday || (person.merged || []);
-    const today: BriefItem[] =
+    const rawToday: BriefItem[] =
       person.today || [...(person.open_prs || []), ...(person.assigned_issues || [])];
     const reviewed: BriefItem[] = person.reviewed || [];
     const opened: BriefItem[] = person.opened || [];
+
+    // Deduplicate: if an item is already listed in 'opened', omit from 'today' to prevent repetition
+    const openedNums = new Set(opened.map((i) => i.number));
+    const today: BriefItem[] = rawToday.filter((i) => !openedNums.has(i.number));
+
     const handle = person.github || person.login || person.chat;
     return { yesterday, today, reviewed, opened, handle };
   };

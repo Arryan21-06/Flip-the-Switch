@@ -5,6 +5,7 @@ import {
   RotateCcw,
   ShieldCheck,
   Clock,
+  AlertCircle,
 } from 'lucide-react';
 import { useDaybreakData } from '../data/source';
 import { SpotlightCard } from '../components/reactbits/SpotlightCard';
@@ -37,7 +38,7 @@ export const SwitchSimulator: React.FC = () => {
       sender: 'scribe',
       senderName: 'Scribe',
       avatarColor: 'bg-accent-amber text-black',
-      roleBadge: 'Claude Code · Standup Zero',
+      roleBadge: 'Briefing Role',
       time: '09:30 AM',
       content: (
         <div className="space-y-2 text-xs">
@@ -50,7 +51,7 @@ export const SwitchSimulator: React.FC = () => {
             <p><strong>@arjun:</strong> 2 commits pushed. Today: PR #39, Issue #31.</p>
           </div>
           <p className="text-text-muted italic text-[11px]">
-            Heads-up: proposals are in the thread below. Reply in this thread to approve or edit.
+            Proposals in the thread below. Reply in this thread to approve or edit.
           </p>
         </div>
       ),
@@ -60,7 +61,7 @@ export const SwitchSimulator: React.FC = () => {
       sender: 'sentinel',
       senderName: 'Sentinel',
       avatarColor: 'bg-accent-coral text-white',
-      roleBadge: 'Codex · Risk & Heuristics',
+      roleBadge: 'Analysis Role',
       time: '09:30 AM',
       content: (
         <div className="space-y-3 text-xs">
@@ -116,7 +117,7 @@ export const SwitchSimulator: React.FC = () => {
         sender: 'clerk',
         senderName: 'Clerk',
         avatarColor: 'bg-status-success text-black',
-        roleBadge: 'Claude Code · Gatekeeper',
+        roleBadge: 'Gatekeeper Role',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
           <div className="space-y-2 text-xs">
@@ -125,10 +126,10 @@ export const SwitchSimulator: React.FC = () => {
               <span>Approved proposals: [{indices}] by @lead</span>
             </p>
             <p className="text-text-secondary leading-relaxed">
-              Bound immutable SHA-256 action digests to approver identity. Quiet hours check: inactive. Rate limits: within budget.
+              Bound SHA-256 action digest to approver identity in append-only local ledger. Quiet hours check: inactive. Rate limits: within budget.
             </p>
             <div className="p-2.5 rounded-lg bg-surface-2 font-mono text-[11px] text-text-primary border border-border">
-              Dry run execution verified: 2 actions queued for GitHub (comments with hidden idempotency markers).
+              Dry run execution verified: actions queued with hidden idempotency markers.
             </div>
           </div>
         ),
@@ -139,7 +140,7 @@ export const SwitchSimulator: React.FC = () => {
         sender: 'clerk',
         senderName: 'Clerk',
         avatarColor: 'bg-status-success text-black',
-        roleBadge: 'Claude Code · Gatekeeper',
+        roleBadge: 'Gatekeeper Role',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
           <div className="space-y-1 text-xs">
@@ -148,7 +149,7 @@ export const SwitchSimulator: React.FC = () => {
               <span>Snoozed target for 2 days</span>
             </p>
             <p className="text-text-secondary">
-              Proposal suppressed from standup briefs until Thursday 04:00 AM UTC. Recorded in state ledger.
+              Proposal suppressed from standup briefs until Thursday 04:00 AM UTC. Recorded in append-only local ledger.
             </p>
           </div>
         ),
@@ -159,7 +160,7 @@ export const SwitchSimulator: React.FC = () => {
         sender: 'sentinel',
         senderName: 'Sentinel',
         avatarColor: 'bg-accent-coral text-white',
-        roleBadge: 'Codex · Risk & Heuristics',
+        roleBadge: 'Analysis Role',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
           <div className="space-y-1 text-xs">
@@ -178,7 +179,7 @@ export const SwitchSimulator: React.FC = () => {
         sender: 'sentinel',
         senderName: 'Sentinel',
         avatarColor: 'bg-accent-coral text-white',
-        roleBadge: 'Codex · Risk & Heuristics',
+        roleBadge: 'Analysis Role',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
           <div className="space-y-2 text-xs">
@@ -199,11 +200,11 @@ export const SwitchSimulator: React.FC = () => {
         sender: 'scribe',
         senderName: 'Scribe',
         avatarColor: 'bg-accent-amber text-black',
-        roleBadge: 'Claude Code',
+        roleBadge: 'Briefing Role',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
           <div className="text-xs text-text-secondary">
-            Command received: <code className="font-mono">{trimmed}</code>. Supported Switch room commands: <code className="font-mono text-accent-amber">brief</code>, <code className="font-mono text-accent-amber">approve &lt;N&gt;</code>, <code className="font-mono text-accent-amber">skip &lt;N&gt;</code>, <code className="font-mono text-accent-amber">snooze &lt;N&gt; 2d</code>, <code className="font-mono text-accent-amber">rules set &lt;K&gt; &lt;V&gt;</code>, <code className="font-mono text-accent-amber">scoreboard</code>.
+            Command received: <code className="font-mono">{trimmed}</code>. Supported room commands: <code className="font-mono text-accent-amber">brief</code>, <code className="font-mono text-accent-amber">approve &lt;N&gt;</code>, <code className="font-mono text-accent-amber">skip &lt;N&gt;</code>, <code className="font-mono text-accent-amber">snooze &lt;N&gt; 2d</code>, <code className="font-mono text-accent-amber">rules set &lt;K&gt; &lt;V&gt;</code>, <code className="font-mono text-accent-amber">scoreboard</code>.
           </div>
         ),
       };
@@ -224,13 +225,13 @@ export const SwitchSimulator: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-xs font-mono text-accent-amber mb-1">
             <MessageSquare className="h-3.5 w-3.5" />
-            <span>SWITCH PLATFORM · LIVE ROOM WORKSPACE</span>
+            <span>DAYBREAK · CHAT SIMULATION</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-            Switch Shared Room Simulator
+            Room Simulator (not Switch)
           </h1>
           <p className="text-sm text-text-secondary mt-1">
-            Live simulation of the collaborative Switch room: Scribe drafts, Sentinel alerts, and Clerk guards execution.
+            Browser demonstration of how Scribe, Sentinel, and Clerk converse in a shared room thread.
           </p>
         </div>
 
@@ -240,8 +241,19 @@ export const SwitchSimulator: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-2 text-text-secondary hover:text-text-primary border border-border text-xs font-medium transition-colors shadow-xs"
         >
           <RotateCcw className="h-3.5 w-3.5" />
-          <span>Reset Room Thread</span>
+          <span>Reset Thread</span>
         </button>
+      </div>
+
+      {/* Mandatory Visible Banner per Honesty Rule */}
+      <div className="p-4 rounded-xl border border-accent-amber/40 bg-accent-amber/10 flex items-center gap-3 text-xs text-text-primary shadow-xs">
+        <AlertCircle className="h-4 w-4 text-accent-amber shrink-0" />
+        <div>
+          <strong className="text-text-primary">Simulated room: no agents are running here.</strong>{' '}
+          <span className="text-text-secondary">
+            This simulator runs client-side to demonstrate chat interactions. Real autonomous agents run in Switch Console using <code className="font-mono text-accent-amber">switch/room-template.yaml</code>.
+          </span>
+        </div>
       </div>
 
       {/* Agents Presence Strip */}
@@ -257,41 +269,39 @@ export const SwitchSimulator: React.FC = () => {
         </SpotlightCard>
 
         <SpotlightCard className="p-3 border border-border/80 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-accent-amber flex items-center justify-center font-bold text-xs text-black shadow-sm">
+          <div className="h-9 w-9 rounded-lg bg-accent-amber flex items-center justify-center font-bold text-xs text-black shadow-sm font-mono">
             SC
           </div>
           <div className="min-w-0">
             <div className="text-xs font-bold text-text-primary truncate">Scribe</div>
-            <div className="text-[10px] text-text-muted">Claude Code · Briefs</div>
+            <div className="text-[10px] text-text-muted">Briefing Role</div>
           </div>
         </SpotlightCard>
 
         <SpotlightCard className="p-3 border border-border/80 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-accent-coral flex items-center justify-center font-bold text-xs text-white shadow-sm">
+          <div className="h-9 w-9 rounded-lg bg-accent-coral flex items-center justify-center font-bold text-xs text-white shadow-sm font-mono">
             SE
           </div>
           <div className="min-w-0">
             <div className="text-xs font-bold text-text-primary truncate">Sentinel</div>
-            <div className="text-[10px] text-text-muted">Codex · Early Warning</div>
+            <div className="text-[10px] text-text-muted">Analysis Role</div>
           </div>
         </SpotlightCard>
 
         <SpotlightCard className="p-3 border border-border/80 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-status-success flex items-center justify-center font-bold text-xs text-black shadow-sm">
+          <div className="h-9 w-9 rounded-lg bg-status-success flex items-center justify-center font-bold text-xs text-black shadow-sm font-mono">
             CL
           </div>
           <div className="min-w-0">
             <div className="text-xs font-bold text-text-primary truncate">Clerk</div>
-            <div className="text-[10px] text-text-muted">Claude Code · Gatekeeper</div>
+            <div className="text-[10px] text-text-muted">Gatekeeper Role</div>
           </div>
         </SpotlightCard>
       </div>
 
-      {/* ============================================================ */}
-      {/* SWITCH CONSOLE DESKTOP WINDOW FRAME                          */}
-      {/* ============================================================ */}
-      <SpotlightCard className="p-0 rounded-2xl overflow-hidden border border-border-strong shadow-2xl bg-surface-1">
-        {/* Window Chrome Titlebar */}
+      {/* Simulated Chat Window Frame */}
+      <SpotlightCard className="p-0 rounded-2xl overflow-hidden border border-border shadow-md bg-surface-1">
+        {/* Titlebar */}
         <div className="px-4 py-2.5 border-b border-border bg-surface-2/80 flex items-center justify-between select-none">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5">
@@ -300,13 +310,13 @@ export const SwitchSimulator: React.FC = () => {
               <span className="h-2.5 w-2.5 rounded-full bg-status-success/80" />
             </div>
             <span className="text-[11px] font-mono text-text-muted ml-2">
-              Switch Console — Room Workspace (#daybreak)
+              Room Simulator (Simulated Multi-Agent Thread)
             </span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono text-status-success">
-            <span className="h-1.5 w-1.5 rounded-full bg-status-success animate-pulse" />
-            <span className="text-[11px]">Mattermost Bridge Active</span>
+          <div className="flex items-center gap-2 text-xs font-mono text-text-muted">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent-amber" />
+            <span className="text-[11px]">Client Simulation</span>
           </div>
         </div>
 
@@ -362,7 +372,7 @@ export const SwitchSimulator: React.FC = () => {
               onClick={() => handleCommand('rules set quiet_hours.friday_cutoff 16:00')}
               className="px-3 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono font-semibold text-text-primary transition-colors shadow-xs"
             >
-              set friday_cutoff 16:00
+              rules set quiet_hours.friday_cutoff 16:00
             </button>
             <button
               type="button"
@@ -384,7 +394,7 @@ export const SwitchSimulator: React.FC = () => {
         >
           <input
             type="text"
-            placeholder="Type a message or command in #daybreak (e.g. approve 1 2, snooze 3 2d, scoreboard)..."
+            placeholder="Type a simulated command (e.g. approve 2 5, snooze 3 2d, rules set quiet_hours.friday_cutoff 16:00)..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className="flex-1 bg-surface-2 px-3.5 py-2.5 rounded-xl text-xs font-mono text-text-primary placeholder:text-text-muted border border-border focus:outline-none focus:border-accent-amber"

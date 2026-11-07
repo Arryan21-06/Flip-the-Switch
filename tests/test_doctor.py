@@ -51,25 +51,25 @@ def test_doctor_allow_write_states(monkeypatch):
 
     monkeypatch.delenv("DAYBREAK_ALLOW_WRITE", raising=False)
     ok, msg = doctor.check_allow_write()
-    assert ok is False and "unset" in msg
+    assert ok is True and "safe default" in msg
 
 
 def test_doctor_webhook_format(monkeypatch):
     monkeypatch.setenv("MATTERMOST_WEBHOOK_URL", "https://chat.example.com/hooks/123")
-    ok, _ = doctor.check_webhook()
-    assert ok is True
+    status, _ = doctor.check_webhook()
+    assert status == "PASS"
 
     monkeypatch.setenv("MATTERMOST_WEBHOOK_URL", "http://localhost:8065/hooks/123")
-    ok, _ = doctor.check_webhook()
-    assert ok is True
+    status, _ = doctor.check_webhook()
+    assert status == "PASS"
 
     monkeypatch.setenv("MATTERMOST_WEBHOOK_URL", "ftp://invalid")
-    ok, _ = doctor.check_webhook()
-    assert ok is False
+    status, _ = doctor.check_webhook()
+    assert status == "FAIL"
 
     monkeypatch.delenv("MATTERMOST_WEBHOOK_URL", raising=False)
-    ok, _ = doctor.check_webhook()
-    assert ok is False
+    status, _ = doctor.check_webhook()
+    assert status == "INFO"
 
 
 def test_doctor_rules_and_state(tmp_path):
@@ -109,7 +109,12 @@ def test_doctor_exit_codes(tmp_path, monkeypatch):
     exit_code = main(["doctor", "--state-dir", str(tmp_path)])
     assert exit_code == 0
 
-    # With missing webhook -> exit 3
-    monkeypatch.delenv("MATTERMOST_WEBHOOK_URL")
+    # With missing optional webhook -> still exit 0 (INFO)
+    monkeypatch.delenv("MATTERMOST_WEBHOOK_URL", raising=False)
+    exit_code = main(["doctor", "--state-dir", str(tmp_path)])
+    assert exit_code == 0
+
+    # With missing required repo -> exit 3
+    monkeypatch.delenv("DAYBREAK_REPO", raising=False)
     exit_code = main(["doctor", "--state-dir", str(tmp_path)])
     assert exit_code == 3
