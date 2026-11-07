@@ -5,7 +5,7 @@ import os
 import sys
 from contextlib import nullcontext
 from pathlib import Path
-from . import analyze, brief, collect, config, decide, execute, ledger, metrics, timeutil as t
+from . import analyze, brief, collect, config, decide, doctor, execute, ledger, metrics, timeutil as t
 from .models import Blocked, GitHubError, read_json, write_json
 
 
@@ -58,6 +58,7 @@ def options(argv: list[str]):
     commands = root.add_subparsers(dest="command", required=True)
     commands.add_parser("analyze")
     commands.add_parser("demo")
+    commands.add_parser("doctor")
     score = commands.add_parser("metrics")
     score.add_argument("--week", action="store_true")
     rule = commands.add_parser("rules")
@@ -117,6 +118,11 @@ def run(args):
                               brief.render(daily, rules), analyze.render(analysis),
                               "Simulated approval: " + " ".join(str(p["index"]) for p in batch),
                               json.dumps(actions, indent=2), metrics.render(score)])
+        return result, text
+    if args.command == "doctor":
+        results, all_passed = doctor.inspect(args, rules)
+        text = "\n".join(f"[{status}] {msg}" for status, msg in results)
+        result = {"checks": [{"status": s, "message": m} for s, m in results], "passed": all_passed}
         return result, text
     if args.command == "rules":
         if args.rule_command == "show":
@@ -180,9 +186,11 @@ def main(argv: list[str] | None = None) -> int:
         args = options(sys.argv[1:] if argv is None else argv)
         if args.now:
             t.now(args.now)
-        with (nullcontext() if args.dry_run or args.command == "demo" else ledger.locked(args.state_dir)):
+        with (nullcontext() if args.dry_run or args.command in ("demo", "doctor") else ledger.locked(args.state_dir)):
             result, markdown = run(args)
         print(json.dumps(result, indent=2, sort_keys=True) if args.json or markdown is None else markdown)
+        if args.command == "doctor" and not result.get("passed"):
+            return 3
         return 4 if isinstance(result, dict) and result.get("failed") else 0
     except Blocked as exc:
         print(str(exc), file=sys.stderr)
