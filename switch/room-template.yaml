@@ -1,1 +1,122 @@
-# TODO(verify): fetch the real Switch schema in M6.
+# Daybreak Switch Room Template
+#
+# Apply via Switch Console: File → New from Template → select this file.
+# The console prompts for each param before creating the room and agents.
+#
+# Verified against the triage-pair.template.yaml reference schema from
+# the Switch repository (version 1 format, Nov 2026).
+
+version: 1
+
+params:
+  team:
+    type: string
+    description: "Name prefix for agents and room (e.g. 'daybreak')"
+    pattern: "[a-z][a-z0-9-]*"
+  scribe_provider:
+    type: provider
+    description: "Coding agent provider for Scribe (brief posting)"
+    default: [claude]
+  sentinel_provider:
+    type: provider
+    description: "Coding agent provider for Sentinel (analysis and rules)"
+    default: [codex, opencode, claude]
+  clerk_provider:
+    type: provider
+    description: "Coding agent provider for Clerk (decisions and execution)"
+    default: [claude]
+  location:
+    type: location
+    description: "Machine where all three agents run"
+    default: local
+    input: advanced
+  directory:
+    type: directory
+    description: "Repository checkout root (shared by all agents)"
+    # TODO(verify): confirm {directory} resolves correctly when shared
+    # across agents. The PRD requires all three to use the same state/.
+    default: "{$agents_dir}/{agent}"
+    input: advanced
+  bridge:
+    type: bridge
+    description: "Chat platform bridge (Mattermost bundled with Switch)"
+    default: [$first]
+
+agents:
+  - name: "{team}-scribe"
+    description: "Posts the daily brief from GitHub or fixture data"
+    addressing: anyone
+    provider: "{scribe_provider}"
+    location: "{location}"
+    directory: "{directory}"
+    instructions: |
+      # Instructions loaded from agents/scribe.md at room creation.
+      # Paste the full contents of agents/scribe.md here, or use the
+      # Console's "Import instructions from file" if available.
+      #
+      # Key constraints:
+      # - Allowed commands: collect, brief only.
+      # - Every fact needs a URL. No link, no claim.
+      # - Drafts are excluded by the toolkit.
+      # - After posting, hand off to {team}-sentinel for analysis.
+      # TODO(verify): confirm whether instructions can reference a file
+      # path instead of inline text.
+
+  - name: "{team}-sentinel"
+    description: "Analyzes stuck work, early warnings, rules, and metrics"
+    addressing: anyone
+    provider: "{sentinel_provider}"
+    location: "{location}"
+    directory: "{directory}"
+    instructions: |
+      # Instructions loaded from agents/sentinel.md at room creation.
+      # Paste the full contents of agents/sentinel.md here, or use the
+      # Console's "Import instructions from file" if available.
+      #
+      # Key constraints:
+      # - Allowed commands: collect, analyze, rules show, rules set, metrics.
+      # - Paste proposal lists exactly as the toolkit prints them.
+      # - Route approve/skip/snooze to {team}-clerk.
+      # TODO(verify): confirm whether instructions can reference a file
+      # path instead of inline text.
+
+  - name: "{team}-clerk"
+    description: "Records human decisions and executes approved actions"
+    addressing: anyone
+    provider: "{clerk_provider}"
+    location: "{location}"
+    directory: "{directory}"
+    instructions: |
+      # Instructions loaded from agents/clerk.md at room creation.
+      # Paste the full contents of agents/clerk.md here, or use the
+      # Console's "Import instructions from file" if available.
+      #
+      # Key constraints:
+      # - Allowed commands: decide, execute only.
+      # - Requires DAYBREAK_ALLOW_WRITE=1 for live writes.
+      # - --dry-run for fixture mode.
+      # TODO(verify): confirm whether instructions can reference a file
+      # path instead of inline text.
+
+rooms:
+  - name: "{team}-room"
+    description: "Daybreak standup-zero room: brief → proposals → decisions → execution"
+    bridge: "{bridge}"
+    agents:
+      - "{team}-scribe"
+      - "{team}-sentinel"
+      - "{team}-clerk"
+    instructions: |
+      This is the Daybreak standup-zero room. A trigger message "brief" starts
+      the daily pipeline. Scribe posts the brief, Sentinel posts proposals,
+      and humans approve/skip/snooze in the thread. Clerk executes approved
+      actions through the gh CLI.
+
+      Grammar (case-insensitive, in proposal threads):
+        brief               — trigger a new daily brief
+        approve N [N...]     — approve proposals by index
+        skip N               — skip a proposal
+        snooze N 1d|2d|1w    — snooze a target
+        rules                — show current rules
+        set KEY VALUE        — change a rule
+        scoreboard           — show weekly metrics
