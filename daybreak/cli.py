@@ -4,7 +4,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from . import brief, collect, config, timeutil as t
+from . import analyze, brief, collect, config, timeutil as t
 from .models import Blocked, GitHubError, read_json, write_json
 
 
@@ -20,6 +20,7 @@ def options(argv: list[str]):
     globals_, rest = global_parser.parse_known_args(argv)
     root = argparse.ArgumentParser(prog="python -m daybreak", parents=[global_parser])
     commands = root.add_subparsers(dest="command", required=True)
+    commands.add_parser("analyze")
     for name in ("collect", "brief"):
         sub = commands.add_parser(name)
         sub.add_argument("--since", choices=["auto", "24h", "72h"], default="auto")
@@ -46,6 +47,9 @@ def get_snapshot(args, rules: dict, refresh: bool = False) -> dict:
 
 def run(args):
     rules = config.load(args.state_dir)
+    if args.command == "analyze":
+        result = analyze.run(get_snapshot(args, rules), rules, args.state_dir, args.dry_run)
+        return result, analyze.render(result)
     if args.command == "collect":
         return get_snapshot(args, rules, True), None
     if args.command == "brief":
