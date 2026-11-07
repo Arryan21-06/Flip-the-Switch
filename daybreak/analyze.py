@@ -6,6 +6,8 @@ from .models import read_json, write_json
 
 def build(snapshot: dict, rules: dict, previous=None, ledger=None, history=None) -> dict:
     candidates = stuck.detect(snapshot, rules)
+    for p in candidates:
+        p.update(repo=snapshot["meta"].get("repo"), source=snapshot["meta"].get("source"))
     result = proposals.select(candidates, rules, t.now(snapshot["meta"]["now"]), previous, ledger, history)
     return {**result, "watching": [], "meta": snapshot["meta"]}
 
@@ -50,4 +52,12 @@ def run(snapshot: dict, rules: dict, state: Path, dry_run: bool = False) -> dict
         archived = [dict(x, active=False) for x in previous if x["id"] not in active]
         write_json(path, [*result["proposals"], *archived])
         write_json(state / "analysis.json", result)
+        budget = [x for x in result["suppressed"] if x["reason"] == "nudge_budget"]
+        if budget:
+            ledger.setdefault("budget_skips", [])
+            for entry in budget:
+                record = dict(entry, time=snapshot["meta"]["now"])
+                if record not in ledger["budget_skips"]:
+                    ledger["budget_skips"].append(record)
+            write_json(state / "ledger.json", ledger)
     return result
