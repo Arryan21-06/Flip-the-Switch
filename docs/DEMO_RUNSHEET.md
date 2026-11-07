@@ -110,3 +110,19 @@ python -m daybreak execute --ignore-quiet-hours
 - **On Screen**:
   Switch to the browser and refresh PR A on GitHub.
   Show the posted comment: `[Daybreak, approved by @lead] ... <!-- daybreak:warn-pr... -->`.
+
+---
+
+## Alternative / Companion: Daybreak Cockpit (Switch Console UI)
+
+If demonstrating via the browser or companion UI:
+1. Start both servers:
+   ```bash
+   make web-dev     # Starts frontend at http://127.0.0.1:5173 and API at http://127.0.0.1:8765
+   ```
+2. Open **[http://127.0.0.1:5173](http://127.0.0.1:5173)** in Chrome or Brave:
+   - **Mission Control (`/`)**: Show live KPI tiles and queue of pending proposals needing human decision.
+   - **Switch Room Simulator (`/simulator`)**: Demonstrate real-time multi-agent chat with Scribe, Sentinel, and Clerk. Type `brief`, `approve 2 5`, `snooze 3 2d`.
+   - **Connectors View (`/connectors`)**: Show authentic Switch Console Connectors view with connected GitHub repo and Switch runtime.
+   - **Proposals & Early Warning (`/proposals`, `/early-warning`)**: Show transparent 3-signal risk points (65 points, HIGH) and one-click "Copy chat command" buttons.
+   - **Audit Ledger (`/audit`)**: Show immutable SHA-256 action digests verifying zero-write safety.
