@@ -1,0 +1,18 @@
+name: Daybreak daily trigger
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *'
+permissions:
+  contents: read
+jobs:
+  brief:
+    if: vars.DAYBREAK_ENABLE_SCHEDULE == '1'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post brief at 09:30 IST
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          DAYBREAK_TRIGGER_TEXT: ${{ vars.DAYBREAK_TRIGGER_TEXT || 'brief' }}
+        run: bash scripts/trigger_brief.sh
