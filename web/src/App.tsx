@@ -10,6 +10,7 @@ import { AuditTrail } from './pages/AuditTrail';
 import { Scoreboard } from './pages/Scoreboard';
 import { HowItWorks } from './pages/HowItWorks';
 import { SystemHealth } from './pages/SystemHealth';
+import { SwitchSimulator } from './pages/SwitchSimulator';
 
 export const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ export const App: React.FC = () => {
         <Route path="rules" element={<RulesView />} />
         <Route path="audit" element={<AuditTrail />} />
         <Route path="scoreboard" element={<Scoreboard />} />
+        <Route path="simulator" element={<SwitchSimulator />} />
         <Route path="architecture" element={<HowItWorks />} />
         <Route path="health" element={<SystemHealth />} />
         {/* Catch-all redirect to Mission Control */}

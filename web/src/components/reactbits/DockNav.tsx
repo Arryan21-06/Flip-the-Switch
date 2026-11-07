@@ -8,6 +8,7 @@ import {
   Sliders,
   History,
   TrendingUp,
+  MessageSquare,
   Network,
   ShieldCheck,
 } from 'lucide-react';
@@ -20,12 +21,13 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'Mission Control', icon: LayoutDashboard },
-  { to: '/brief', label: 'Morning Brief', icon: Newspaper },
+  { to: '/brief', label: 'Brief', icon: Newspaper },
   { to: '/proposals', label: 'Proposals', icon: CheckSquare },
   { to: '/early-warning', label: 'Early Warning', icon: AlertTriangle },
   { to: '/rules', label: 'Rules', icon: Sliders },
-  { to: '/audit', label: 'Audit Trail', icon: History },
+  { to: '/audit', label: 'Audit', icon: History },
   { to: '/scoreboard', label: 'Scoreboard', icon: TrendingUp },
+  { to: '/simulator', label: 'Switch Room', icon: MessageSquare },
   { to: '/architecture', label: 'How It Works', icon: Network },
   { to: '/health', label: 'Health', icon: ShieldCheck },
 ];

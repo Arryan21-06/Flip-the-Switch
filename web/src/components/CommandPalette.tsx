@@ -56,6 +56,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     { label: 'Rulebook & Thresholds', path: '/rules', icon: Sliders, category: 'Navigation' },
     { label: 'Audit Trail & Digest Ledger', path: '/audit', icon: History, category: 'Navigation' },
     { label: 'Weekly Impact Scoreboard', path: '/scoreboard', icon: TrendingUp, category: 'Navigation' },
+    { label: 'Switch Shared Room Simulator', path: '/simulator', icon: Newspaper, category: 'Navigation' },
     { label: 'Architecture & System Anatomy', path: '/architecture', icon: Network, category: 'Navigation' },
     { label: 'System Health & Diagnostics', path: '/health', icon: ShieldCheck, category: 'Navigation' },
   ];
