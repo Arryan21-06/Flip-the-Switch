@@ -158,4 +158,4 @@ evidence-linked output — just without the chat surface.
 
 **Level 2 verified; Level 3 requires Console GUI steps that cannot be
 automated from the CLI.** The room template is written and ready to apply.
-Level 1 (CLI) is fully tested with 74 automated tests.
+Level 1 (CLI) is fully tested with 76 automated tests.
