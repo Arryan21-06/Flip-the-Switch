@@ -120,6 +120,8 @@ make demo         # Complete pipeline on seeded scenarios — no GitHub, no writ
 
 ## Daybreak Cockpit (Read-Only Companion Dashboard)
 
+> **Live Deployment**: [https://web-tan-sigma-02y10rnhyp.vercel.app](https://web-tan-sigma-02y10rnhyp.vercel.app)
+
 Daybreak Cockpit is a companion web dashboard located in `web/` that provides real-time visibility into Standup Zero briefings, proposals, active rules, cryptographic audit trails, and engineering impact metrics.
 
 ### Key Guarantees
