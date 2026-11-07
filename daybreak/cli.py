@@ -5,7 +5,7 @@ import os
 import sys
 from contextlib import nullcontext
 from pathlib import Path
-from . import analyze, brief, collect, config, decide, execute, ledger, timeutil as t
+from . import analyze, brief, collect, config, decide, execute, ledger, metrics, timeutil as t
 from .models import Blocked, GitHubError, read_json, write_json
 
 
@@ -22,6 +22,16 @@ def options(argv: list[str]):
     root = argparse.ArgumentParser(prog="python -m daybreak", parents=[global_parser])
     commands = root.add_subparsers(dest="command", required=True)
     commands.add_parser("analyze")
+    commands.add_parser("demo")
+    score = commands.add_parser("metrics")
+    score.add_argument("--week", action="store_true")
+    rule = commands.add_parser("rules")
+    rule_sub = rule.add_subparsers(dest="rule_command", required=True)
+    rule_sub.add_parser("show")
+    setter = rule_sub.add_parser("set")
+    setter.add_argument("key")
+    setter.add_argument("value")
+    setter.add_argument("--by", required=True)
     decision = commands.add_parser("decide")
     decision.add_argument("action", choices=["approve", "skip", "snooze"])
     decision.add_argument("indices", nargs="+", type=int)
@@ -55,6 +65,47 @@ def get_snapshot(args, rules: dict, refresh: bool = False) -> dict:
 
 def run(args):
     rules = config.load(args.state_dir)
+    if args.command == "demo":
+        rules = config.validate(read_json(config.ROOT / "fixtures/rules.default.json"))
+        data = collect.collect("fixture", args.fixture, None, args.now, rules)
+        daily = brief.build(data, rules)
+        analysis = analyze.build(data, rules)
+        # The demo's synthetic approval is isolated in memory.
+        batch, book = decide.decide(analysis["proposals"], {"executed": {}, "nudges": {}, "decisions": [], "actions": {}, "budget_skips": []},
+                                    rules, "approve", [p["index"] for p in analysis["proposals"]],
+                                    "demo-lead", t.now(data["meta"]["now"])) if analysis["proposals"] else ([], ledger.load(args.state_dir))
+        actions = execute.execute(batch, book, rules, t.now(data["meta"]["now"]), args.state_dir,
+                                  args.state_dir / "unused.json", data["meta"]["repo"], dry_run=True)
+        score = metrics.build(data, rules, book, [])
+        result = {"brief": daily, "analysis": analysis, "execution": actions, "metrics": score}
+        text = "\n\n".join(["Daybreak fixture demo · seeded scenarios · simulated approval · no writes",
+                              brief.render(daily, rules), analyze.render(analysis),
+                              "Simulated approval: " + " ".join(str(p["index"]) for p in batch),
+                              json.dumps(actions, indent=2), metrics.render(score)])
+        return result, text
+    if args.command == "rules":
+        if args.rule_command == "show":
+            return rules, None
+        try:
+            value = json.loads(args.value)
+        except ValueError:
+            value = args.value
+        updated, old = config.set_rule(rules, args.key, value, args.by)
+        at = t.now(args.now)
+        book = ledger.load(args.state_dir)
+        record = {"id": args.key, "action": "rule_change", "approver": args.by, "time": t.iso(at),
+                  "old": old, "new": value}
+        if record not in book["decisions"]:
+            book["decisions"].append(record)
+        if not args.dry_run:
+            ledger.save(args.state_dir, book)
+            write_json(args.state_dir / "rules.json", updated)
+        return updated, f"Rule {args.key}: {json.dumps(old)} → {json.dumps(value)} by @{args.by}"
+    if args.command == "metrics":
+        data = get_snapshot(args, rules)
+        history = [read_json(p) for p in sorted((args.state_dir / "snapshots").glob("*.json"))]
+        result = metrics.build(data, rules, ledger.load(args.state_dir), history)
+        return result, metrics.render(result)
     if args.command in ("decide", "execute"):
         data = read_json(args.state_dir / "snapshot.json")
         if not data:
@@ -94,7 +145,7 @@ def main(argv: list[str] | None = None) -> int:
         args = options(sys.argv[1:] if argv is None else argv)
         if args.now:
             t.now(args.now)
-        with (nullcontext() if args.dry_run else ledger.locked(args.state_dir)):
+        with (nullcontext() if args.dry_run or args.command == "demo" else ledger.locked(args.state_dir)):
             result, markdown = run(args)
         print(json.dumps(result, indent=2, sort_keys=True) if args.json or markdown is None else markdown)
         return 4 if isinstance(result, dict) and result.get("failed") else 0
