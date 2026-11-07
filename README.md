@@ -1,8 +1,6 @@
 # Daybreak — Standup Zero with Early Warning
 
-> Three AI agents and a deterministic Python toolkit replace the daily standup,
-> surface stuck pull requests, and flag at-risk PRs early — with every outbound
-> action approved by a human.
+> Three AI agents and a deterministic Python toolkit replace the daily standup, surface stuck pull requests, and flag at-risk PRs early — with every outbound action approved by a human.
 
 **Flip the Switch Hackathon · Track 1: Best Business Workflow**
 
@@ -18,101 +16,125 @@ Three small frictions repeat every working day:
 | **Rotting work** | Review requests wait, CI stays red and approved PRs sit unmerged because nobody wants to nag |
 | **Tracker drift** | The tracker disagrees with reality because updating it is a second job |
 
-Daybreak turns GitHub activity into a **morning brief**, a short list of
-**evidence-backed nudges**, and **early flags** for PRs that look likely to stall —
-all inside the team's chat.
+Daybreak turns GitHub activity into an evidence-linked **morning brief**, a short list of **evidence-backed nudges**, and **early flags** for PRs that look likely to stall — all inside the team's chat.
 
 ---
 
 ## Architecture
 
+```mermaid
+flowchart TD
+    subgraph Trigger
+        Cron["GitHub Actions / Cron (09:30 IST)"] -->|Webhook 'brief'| MM["Mattermost #daybreak / Switch Room"]
+        Human["Team Lead / Dev"] -->|Message 'brief'| MM
+    end
+
+    subgraph Agents["Switch Room Multi-Agent Layer"]
+        Scribe["Scribe (Claude Code)<br/>Scope: collect, brief"]
+        Sentinel["Sentinel (Codex/OpenCode)<br/>Scope: analyze, rules, metrics"]
+        Clerk["Clerk (Claude Code)<br/>Scope: decide, execute"]
+    end
+
+    subgraph Toolkit["Daybreak Python Toolkit (Standard Library Only)"]
+        CLI["CLI: python -m daybreak"]
+        Collect["collect.py / ghclient.py"]
+        Brief["brief.py"]
+        Stuck["stuck.py (R1-R4)"]
+        EarlyWarn["early_warning.py (Signals)"]
+        Proposals["proposals.py (Ranking & Caps)"]
+        Decide["decide.py (Action Digests)"]
+        Execute["execute.py (Recovery & Idempotency)"]
+        Ledger["ledger.py (Process Locking)"]
+        Metrics["metrics.py (Scoreboard)"]
+    end
+
+    subgraph State["state/ Persistence"]
+        Snap["snapshot.json"]
+        Prop["proposals/YYYY-MM-DD.json"]
+        Rules["rules.json"]
+        Ledg["ledger.json"]
+    end
+
+    MM --> Scribe
+    Scribe -->|daybreak collect && brief| Collect & Brief
+    Collect --> Snap
+    Brief --> MM
+
+    Scribe -.->|Hands off thread| Sentinel
+    Sentinel -->|daybreak analyze| Stuck & EarlyWarn & Proposals
+    Snap --> Proposals
+    Proposals --> Prop
+    Sentinel -->|Post proposals list| MM
+
+    Human -->|approve 1 2 / snooze 3 2d| MM
+    MM --> Clerk
+    Clerk -->|daybreak decide| Decide
+    Decide -->|Cryptographic Action Digest| Prop & Ledg
+    Clerk -->|daybreak execute| Execute
+    Execute -->|gh CLI: Comments & Review Requests| GitHub[("GitHub Live Repo")]
+    Execute --> Ledg
 ```
- Scheduler (cron or GitHub Action)        GitHub (live)    Fixtures (JSON)
-        | webhook post "brief"                 ^                 ^
-        v                                      | gh CLI          |
- +--------------------------------------------------------------------+
- | Mattermost #daybreak  <-- Collaboration Bridge -->  Switch Room    |
- +----------------------------------+---------------------------------+
-                                    | Agent Bridge (Console)
-              +---------------------+---------------------+
-              v                     v                     v
-         Scribe                 Sentinel                Clerk
-         collect, brief         collect, analyze,       decide, execute
-                                rules, metrics
-              \                     |                     /
-               +-----------  daybreak toolkit (Python)  --+
-                              state/ snapshot, proposals, rules, ledger
-```
 
-**Design principle: "Code decides, agents explain."**
+### Core Principle: "Code decides, agents explain."
 
-- Detection, scoring, ranking and idempotency live in tested Python (standard
-  library only, zero runtime dependencies).
-- Agents read JSON, write prose and talk to humans. No agent can write to
-  GitHub without a human approval recorded in the ledger.
-
-### Data Flow
-
-1. A trigger message `brief` arrives (from the scheduler or a human).
-2. **Scribe** runs `daybreak collect` then `daybreak brief` and posts the brief.
-3. **Sentinel** runs `daybreak analyze` and posts the numbered proposal list.
-4. A human replies with a decision (`approve 1 5`, `skip 2`, `snooze 3 2d`).
-5. **Clerk** runs `daybreak decide` then `daybreak execute` and posts result links.
-6. For a rule change, Sentinel runs `daybreak rules set` and confirms.
-7. Weekly, Sentinel runs `daybreak metrics --week` and posts the scoreboard.
-
-### Agents
-
-| Agent | Provider | Allowed Commands | Role |
-| --- | --- | --- | --- |
-| **Scribe** | Claude Code | `collect`, `brief` | Post the daily brief; edit a person's own section on request |
-| **Sentinel** | Codex / OpenCode | `collect`, `analyze`, `rules show/set`, `metrics` | Post proposals; handle rule changes; post the scoreboard |
-| **Clerk** | Claude Code | `decide`, `execute` | Parse human decisions, record them, execute, post result links |
+- **Deterministic Python**: Detection, scoring, ranking, deduplication, suppression, quiet hours, and idempotency live in tested Python (standard library only, zero runtime dependencies).
+- **Agents**: Scribe, Sentinel, and Clerk read JSON, explain results to humans in chat, and accept human decisions. No agent can alter code, merge PRs, or write to GitHub without recorded human approval.
 
 ---
 
-## Quick Start
-
-### Prerequisites
-
-- Python 3.11+ (standard library only — no pip packages at runtime)
-- `gh` CLI ([install](https://cli.github.com/)) — optional, only for live GitHub mode
-
-### One-Command Setup
+## One-Command Setup
 
 ```bash
-git clone https://github.com/<your-org>/Flip-the-Switch.git
+git clone https://github.com/aditya1981/Flip-the-Switch.git
 cd Flip-the-Switch
-make setup        # Creates venv, installs pytest, initializes state/
+make setup        # Verifies Python 3.11+, creates .venv, installs pytest, initializes state/
 ```
 
 ### Run Tests
-
 ```bash
-make test         # 74 tests, ~0.1s, fully offline
+make test         # 76 tests, 0.08s, fully offline (network calls forbidden by conftest)
 ```
 
 ### Run the Fixture Demo
-
 ```bash
-make demo         # Full pipeline on seeded scenarios — no GitHub, no writes
+make demo         # Complete pipeline on seeded scenarios — no GitHub, no writes
 ```
 
-The demo runs the complete pipeline: collect → brief → analyze → approve all →
-execute (dry run) → scoreboard, all on deterministic fixture data.
+---
 
-### Run Against a Live Repository
+## Running in Switch
 
-```bash
-export DAYBREAK_REPO="owner/repo"
-export DAYBREAK_ALLOW_WRITE=1          # Required for outbound writes
+1. **Open Switch Console**: Launch `/Applications/Switch Console.app`.
+2. **Import Room Template**: Go to **File → New from Template**, choose `switch/room-template.yaml`.
+3. **Configure Parameters**:
+   - `team`: `daybreak`
+   - `directory`: Set to the absolute path of this repository checkout so all agents share `state/`.
+   - `bridge`: Select your Mattermost bridge.
+4. **Agent Roles**:
+   - **Scribe** (Claude Code): Handles `collect` and `brief`.
+   - **Sentinel** (Codex/OpenCode): Handles `analyze`, `rules show/set`, and `metrics`.
+   - **Clerk** (Claude Code): Handles `decide` and `execute`.
+5. See [`docs/SWITCH_SETUP.md`](docs/SWITCH_SETUP.md) for the detailed step-by-step checklist.
 
-python -m daybreak collect --source github
-python -m daybreak brief
-python -m daybreak analyze
-python -m daybreak decide approve 1 2 --by your-github-login
-python -m daybreak execute
-```
+---
+
+## How a Pending Write is Recovered
+
+Daybreak ensures exactly-once execution safety through write-ahead intent logging and remote marker checks:
+
+1. **Write-Ahead Intent**: Before making any outbound API call to GitHub, `execute.py` records `{"status": "pending"}` in `state/ledger.json`.
+2. **HTML Idempotency Marker**: Every comment posted to GitHub embeds a hidden marker: `<!-- daybreak:PROPOSAL_ID -->`.
+3. **Remote Recovery**: Before issuing a comment call, Daybreak queries GitHub comments. If the marker is already present (e.g., from an interrupted connection or past partial run), it recovers the existing comment URL without posting a duplicate.
+4. **Safe Failure**: If a previous write attempt ended in an uncertain state and no remote marker is found, Daybreak stops and prompts for human inspection rather than risking a duplicate comment.
+
+---
+
+## Limitations Stated Honestly
+
+- **Analysis Scenarios**: Complex temporal scenarios (e.g. "PR waiting 31 hours for review") use deterministic seeded fixtures (`fixtures/snapshot_tuesday.json`) because real GitHub timestamps cannot be back-dated. Live GitHub mode verifies the ingestion and write paths.
+- **Early-Warning Flags**: Early warning flags are transparent, deterministic heuristics based on observable signals (workload, unassigned reviewer, dependencies); they are not a calibrated ML model or delay probability.
+- **Operating System**: Daybreak uses `fcntl.flock` for concurrency safety across agents; it runs on macOS and Linux (not Windows without WSL).
+- **Switch Fallback Level Achieved**: Level 2 (single-agent multi-role) and Level 1 (CLI toolkit) are verified. Level 3 (three autonomous agents interacting across threads) has the room template and instruction files prepared, requiring manual verification in the Switch Console GUI.
 
 ---
 
@@ -120,155 +142,21 @@ python -m daybreak execute
 
 Run as `python -m daybreak <command>`. Global flags work before or after the command.
 
-| Flag | Purpose |
-| --- | --- |
-| `--source github\|fixture` | Data source (auto-detected from `--repo`) |
-| `--repo OWNER/REPO` | Target repository |
-| `--fixture PATH` | Fixture JSON path (default: `fixtures/snapshot_tuesday.json`) |
-| `--now ISO` | Time-travel for deterministic testing |
-| `--state-dir PATH` | State directory (default: `state/`) |
-| `--dry-run` | No network calls, no state writes |
-| `--json` | JSON output instead of markdown |
-
-| Command | Purpose |
-| --- | --- |
-| `collect [--since auto\|24h\|72h]` | Build the snapshot |
-| `brief [--since auto\|24h\|72h]` | Group activity per person |
-| `analyze` | Run stuck rules + early warning, rank and cap |
-| `decide approve N... --by USER` | Mark proposals approved |
-| `decide skip N... --by USER` | Mark proposals skipped |
-| `decide snooze N --for 1d\|2d\|1w --by USER` | Snooze a target |
-| `execute [--ignore-quiet-hours]` | Run approved proposals through `gh` |
-| `rules show` | Display current rules |
-| `rules set KEY VALUE --by USER` | Change a rule |
-| `metrics --week` | Weekly scoreboard |
-| `demo` | Full fixture pipeline demo |
-
-**Exit codes:** 0 success · 2 invalid input · 3 blocked (quiet hours, unauthorized, writes disabled) · 4 GitHub/auth error.
-
----
-
-## Stuck-Item Rules
-
-| Rule | Trigger | Default Threshold |
-| --- | --- | --- |
-| R1 `review_stuck` | Review request waiting too long | 24 hours |
-| R2 `ci_red` | CI check failing for too long | 12 hours |
-| R3 `approved_unmerged` | Approved PR sitting unmerged | 24 hours |
-| R4 `stale_issue` | Assigned issue with no updates | 3 days |
-
-Draft PRs are excluded from R1–R3.
-
-## Early Warning Flags
-
-Heuristic signals — not predictions. Output says "flag", never "predict".
-
-| Signal | Condition | Points |
-| --- | --- | --- |
-| `no_reviewer` | Open > 4h with no reviewer requested | +20 |
-| `workload` | Author has ≥ 3 other open PRs | +20 |
-| `dependency` | Body references an open PR/issue ("depends on #N") | +25 |
-
-**Tiers:** 1 signal = Watch (no actions) · 2 = At risk · 3 = High.
-
----
-
-## Safety & Idempotency
-
-- **Human approval required** — zero outbound writes without explicit `approve`.
-- **Action digest** — SHA-256 of `(id, target, actions, repo, source)` binds
-  the approved content immutably.
-- **Idempotency markers** — `<!-- daybreak:PROPOSAL_ID -->` in every comment;
-  checked before writing to prevent duplicates.
-- **Write-ahead intent** — uncertain writes block automatic retries.
-- **Process lock** — `fcntl.flock` prevents concurrent state corruption.
-- **Quiet hours** — execution blocked outside working hours (configurable).
-- **Nudge budget** — max 2 nudges per person per day (configurable).
-- **Evidence rule** — no link, no claim. Every item requires a valid URL.
-
----
-
-## Repository Structure
-
-```
-Flip-the-Switch/
-├── daybreak/                    # Python toolkit (1,128 LOC, stdlib only)
-│   ├── cli.py                   # CLI routing and global options
-│   ├── config.py                # Default rules, validation, authorization
-│   ├── timeutil.py              # UTC parsing, quiet hours, working-day windows
-│   ├── ghclient.py              # Subprocess wrapper for gh CLI
-│   ├── collect.py               # Snapshot collection (fixture or live)
-│   ├── brief.py                 # Per-person activity briefs
-│   ├── stuck.py                 # Four stuck-work detection rules
-│   ├── early_warning.py         # Heuristic early-warning signals
-│   ├── proposals.py             # Ranking, caps, stable indexing
-│   ├── analyze.py               # Orchestrates detection → proposals
-│   ├── decide.py                # Human decisions with action digests
-│   ├── execute.py               # Approved action execution with recovery
-│   ├── ledger.py                # Atomic persistence and process lock
-│   ├── metrics.py               # Weekly scoreboard calculations
-│   └── models.py                # JSON models, evidence validation
-├── agents/                      # Agent instruction files
-│   ├── scribe.md                # Scribe (Claude Code)
-│   ├── sentinel.md              # Sentinel (Codex/OpenCode)
-│   └── clerk.md                 # Clerk (Claude Code)
-├── fixtures/                    # Deterministic test data
-│   ├── snapshot_tuesday.json    # 14 PRs, 2 issues, 6 commits
-│   └── rules.default.json      # Default configuration
-├── tests/                       # 74 tests, fully offline
-├── scripts/                     # Setup, trigger, and seeding scripts
-├── switch/                      # Switch room template (WIP)
-├── state/                       # Runtime state (git-ignored)
-├── docs/                        # Architecture, decisions, demo guide
-├── .github/workflows/           # Optional daily trigger action
-├── Makefile                     # setup, test, demo targets
-└── pyproject.toml               # Python 3.11+, zero runtime deps
-```
-
----
-
-## Fixture Scenarios
-
-The fixture snapshot (`fixtures/snapshot_tuesday.json`) models a team of 5 at
-`acme/shop` on **Tue 2026-11-10 at 09:30 IST** (04:00 UTC):
-
-| Item | Author | Expected Result |
-| --- | --- | --- |
-| PR #42 | priya | Stuck: review waiting 31h for @arjun (SLA 24h) |
-| PR #45 | meera | Stuck: CI red for 14h (limit 12h) |
-| PR #39 | arjun | Stuck: approved 26h ago, unmerged (limit 24h) |
-| Issue #30 | — (assigned sam) | Stuck: stale 96h (limit 72h) |
-| PR #52 | sam | Early warning: HIGH (3 signals, 65 points) |
-| PR #47, #49, #50 | sam | Watching: workload only |
-| PR #44, #55 | priya, lead | Excluded (drafts) |
-| PR #53 | meera | Not flagged (grace period) |
-
----
-
-## Configuration
-
-Rules are stored in `state/rules.json` and can be changed via chat
-(`set KEY VALUE`) or CLI (`daybreak rules set KEY VALUE --by USER`).
-
-Key settings: `stuck.review_sla_hours`, `stuck.red_ci_hours`,
-`quiet_hours.start`, `quiet_hours.friday_cutoff`, `limits.max_stuck_proposals`,
-`early_warning.grace_hours`, `reviewers`, `approvers`, `timezone`,
-`standup_minutes`.
-
-The `team` key is not settable via chat (admin-only).
-
----
-
-## Environment Variables
-
-| Variable | Purpose |
-| --- | --- |
-| `DAYBREAK_REPO` | Default repository (`OWNER/REPO`) |
-| `DAYBREAK_ALLOW_WRITE` | Set to `1` to enable GitHub writes |
-| `MATTERMOST_WEBHOOK_URL` | Webhook for the daily trigger script |
+| Command | Purpose | Output |
+| :--- | :--- | :--- |
+| `collect [--since auto\|24h\|72h]` | Ingest PRs, issues, commits | `state/snapshot.json` |
+| `brief [--since auto\|24h\|72h]` | Group activity per team member | `state/brief.json` and markdown |
+| `analyze` | Run stuck rules + early warnings, rank & cap | `state/proposals/DATE.json` and markdown |
+| `decide approve N... --by USER` | Approve numbered proposals | Confirmation |
+| `decide skip N... --by USER` | Skip proposals (tracks false positives) | Confirmation |
+| `decide snooze N --for 1d\|2d\|1w` | Snooze a target | Confirmation |
+| `execute [--ignore-quiet-hours]` | Run approved actions on GitHub | Result URLs |
+| `rules show` / `rules set K V` | Inspect or modify team rules | Current rules or diff |
+| `metrics --week` | Scoreboard comparing baseline & current | Markdown report |
+| `demo` | Full fixture demonstration | Transcript |
 
 ---
 
 ## License
 
-Hackathon project. See repository for details.
+Created for the Flip the Switch Hackathon (Track 1).
