@@ -45,7 +45,7 @@ def execute(proposals: list[dict], book: dict, rules: dict, at, state: Path,
     active = [p for p in proposals if p.get("active", True)]
     pending = [p for p in active if p["status"] == "approved" and p["id"] not in book["executed"]]
     if not pending:
-        if any(p["status"] in ("proposed", "failed") for p in active):
+        if any(p["status"] in ("proposed", "failed") for p in active) and not any(p["id"] in book["executed"] for p in active):
             raise Blocked("No approved proposals to execute")
         return {"results": [], "message": "No approved actions remain"}
     if not ignore_quiet and t.quiet(at, rules):

@@ -1,15 +1,21 @@
 """Analyze a snapshot and persist the current day's proposal batch."""
 from pathlib import Path
-from . import stuck, proposals, timeutil as t
+from . import early_warning, stuck, proposals, timeutil as t
 from .models import read_json, write_json
 
 
-def build(snapshot: dict, rules: dict, previous=None, ledger=None, history=None) -> dict:
+def build(snapshot: dict, rules: dict, previous=None, ledger=None, history=None, include_warnings=True) -> dict:
     candidates = stuck.detect(snapshot, rules)
+    warnings, watching = early_warning.detect(snapshot, rules) if include_warnings else ([], [])
+    candidates.extend(warnings)
     for p in candidates:
         p.update(repo=snapshot["meta"].get("repo"), source=snapshot["meta"].get("source"))
     result = proposals.select(candidates, rules, t.now(snapshot["meta"]["now"]), previous, ledger, history)
-    return {**result, "watching": [], "meta": snapshot["meta"]}
+    at = t.now(snapshot["meta"]["now"])
+    snoozed = {proposals.target_key(p) for p in [*(previous or []), *(history or [])]
+               if t.parse(p.get("snooze_until")) and t.parse(p["snooze_until"]) > at}
+    watching = [p for p in watching if proposals.target_key(p) not in snoozed]
+    return {**result, "watching": watching, "meta": snapshot["meta"]}
 
 
 def render(result: dict) -> str:

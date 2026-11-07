@@ -4,7 +4,7 @@ from daybreak import analyze, stuck, proposals, timeutil as t
 
 
 def test_exact_stuck(snapshot, rules):
-    result = analyze.build(snapshot, rules)
+    result = analyze.build(snapshot, rules, include_warnings=False)
     assert [(p["index"], p["target"]["number"], p["over_hours"]) for p in result["proposals"]] == [(1, 30, 24), (2, 42, 7), (3, 39, 2), (4, 45, 2)]
 
 
@@ -34,7 +34,7 @@ def test_latest_approval(snapshot, rules):
 def test_cap(snapshot, rules):
     rules["limits"]["max_stuck_proposals"] = 2
     result = analyze.build(snapshot, rules)
-    assert [p["target"]["number"] for p in result["proposals"]] == [30, 42]
+    assert [p["target"]["number"] for p in result["proposals"] if p["severity"] == "stuck"] == [30, 42]
     assert [x["reason"] for x in result["suppressed"]] == ["suppressed_by_cap"] * 2
 
 
@@ -49,14 +49,14 @@ def test_snooze_and_budget(snapshot, rules):
     previous = analyze.build(snapshot, rules)["proposals"]
     previous[0].update(status="snoozed", snooze_until="2026-11-12T04:00:00Z")
     result = analyze.build(snapshot, rules, previous, {"nudges": {"2026-11-10": {"arjun": 2}}})
-    assert [p["target"]["number"] for p in result["proposals"]] == [45]
+    assert [p["target"]["number"] for p in result["proposals"] if p["severity"] == "stuck"] == [45]
     assert {x["reason"] for x in result["suppressed"]} == {"snoozed", "nudge_budget"}
 
 
 def test_executed_suppression(snapshot, rules):
     first = analyze.build(snapshot, rules)["proposals"]
     result = analyze.build(snapshot, rules, first, {"executed": {first[0]["id"]: {}}})
-    assert [p["index"] for p in result["proposals"]] == [2, 3, 4]
+    assert [p["index"] for p in result["proposals"]] == [2, 3, 4, 5]
 
 
 def test_duplicate_target(snapshot, rules):
