@@ -157,6 +157,7 @@ Run as `~/.daybreak/bin/daybreak <command>` (or `python -m daybreak <command>`).
 
 ---
 
-## License
+## License & Notice
 
-Created for the Flip the Switch Hackathon (Track 1).
+- **Daybreak** is licensed under the [MIT License](LICENSE).
+- **Notice**: Daybreak uses [Switch](https://switchagents.ai) (Apache 2.0 with Commons Clause) as an external multi-agent collaboration platform and chat bridge dependency. Daybreak does not redistribute Switch.

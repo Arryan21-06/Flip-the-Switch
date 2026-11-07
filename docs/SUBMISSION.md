@@ -1,0 +1,29 @@
+# Daybreak — Flip the Switch Hackathon Submission
+
+## Project Description
+
+Daybreak is a standup-zero workflow automation system built for engineering teams. It replaces daily status theatre with an evidence-linked morning brief, surfaces rotting work across pull requests and issues, and flags stalling PRs early using transparent heuristic signals. Following the core architectural principle "code decides, agents explain", all detection, scoring, ranking, quiet hours gating, and idempotency logic runs in deterministic, zero-dependency Python. Three specialized AI agents (Scribe, Sentinel, Clerk) collaborate within a shared Switch chat room to present daily updates, discuss proposals, and accept human decisions. Crucially, zero outbound actions occur without explicit human approval, binding immutable SHA-256 action digests to verified approver identities for safe, exactly-once GitHub execution.
+
+## Hackathon Track
+- **Track 1**: Best Business Workflow
+
+## Tech Stack
+- **Multi-Agent Orchestration**: Switch Agents (`switchagents.ai`)
+- **Chat Surface**: Mattermost (bundled with Switch)
+- **Agent Models**: Claude Code (Scribe, Clerk), Codex / OpenCode (Sentinel)
+- **Core Engine**: Python 3.11+ (Standard Library only, zero external runtime dependencies)
+- **Upstream Data & Actions**: GitHub via `gh` CLI and deterministic offline JSON fixtures
+- **Testing**: pytest (76+ automated tests passing hermetically)
+
+## How Switch is Used
+
+- **Shared Room Collaboration**: Switch provides the unified multi-agent chat room (`switch/room-template.yaml`) where Scribe, Sentinel, and Clerk collaborate in threaded conversations alongside engineering leads and developers.
+- **Role-Gated Command Handoffs**: Switch hosts specialized agent roles with strict instruction boundaries (`agents/*.md`). Scribe generates the daily brief, Sentinel posts evidence-linked proposals, and Clerk executes human-approved decisions.
+- **Integration Level Achieved**: Level 2 (single-agent multi-role execution via the standard toolkit wrapper) and Level 1 (CLI toolkit) are verified and test-backed.
+  > **[CONSOLE TEST RESULTS PLACEHOLDER]**:
+  > *Status after manual Switch Console GUI verification: [Level 3 Verified / Level 2 Active / Notes on template import in Console]*
+
+## Submission Links
+
+- **Repository**: [https://github.com/aditya1981/Flip-the-Switch](https://github.com/aditya1981/Flip-the-Switch)
+- **Demo Video (3 Minutes)**: `[INSERT DEMO VIDEO LINK HERE]`
