@@ -10,15 +10,50 @@ from .models import Blocked, GitHubError, read_json, write_json
 
 
 def options(argv: list[str]):
+    user_cfg = config.user_config()
     global_parser = argparse.ArgumentParser(add_help=False)
-    global_parser.add_argument("--source", choices=["github", "fixture"])
-    global_parser.add_argument("--repo", default=os.environ.get("DAYBREAK_REPO"))
-    global_parser.add_argument("--fixture", type=Path, default=config.ROOT / "fixtures/snapshot_tuesday.json")
+    global_parser.add_argument("--source", choices=["github", "fixture"], default=None)
+    global_parser.add_argument("--repo", default=None)
+    global_parser.add_argument("--fixture", type=Path, default=None)
     global_parser.add_argument("--now")
-    global_parser.add_argument("--state-dir", type=Path, default=Path("state"))
+    global_parser.add_argument("--state-dir", type=Path, default=None)
     global_parser.add_argument("--dry-run", action="store_true")
     global_parser.add_argument("--json", action="store_true")
     globals_, rest = global_parser.parse_known_args(argv)
+
+    # Precedence: CLI flag > environment variable > ~/.daybreak/config.json > default
+    # 1. source
+    source = (globals_.source or
+              os.environ.get("DAYBREAK_SOURCE") or
+              user_cfg.get("source") or
+              user_cfg.get("DAYBREAK_SOURCE") or
+              None)
+    # 2. repo
+    repo = (globals_.repo or
+            os.environ.get("DAYBREAK_REPO") or
+            user_cfg.get("repo") or
+            user_cfg.get("DAYBREAK_REPO") or
+            None)
+    # 3. fixture
+    fixture = globals_.fixture
+    if fixture is None:
+        raw_fix = (os.environ.get("DAYBREAK_FIXTURE") or
+                   user_cfg.get("fixture") or
+                   user_cfg.get("DAYBREAK_FIXTURE"))
+        fixture = Path(raw_fix).expanduser() if raw_fix else config.ROOT / "fixtures/snapshot_tuesday.json"
+    # 4. state_dir
+    state_dir = globals_.state_dir
+    if state_dir is None:
+        raw_state = (os.environ.get("DAYBREAK_STATE_DIR") or
+                     user_cfg.get("state_dir") or
+                     user_cfg.get("DAYBREAK_STATE_DIR"))
+        state_dir = Path(raw_state).expanduser() if raw_state else Path("state")
+
+    globals_.source = source
+    globals_.repo = repo
+    globals_.fixture = fixture
+    globals_.state_dir = state_dir
+
     root = argparse.ArgumentParser(prog="python -m daybreak", parents=[global_parser])
     commands = root.add_subparsers(dest="command", required=True)
     commands.add_parser("analyze")

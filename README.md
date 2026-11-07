@@ -140,7 +140,7 @@ Daybreak ensures exactly-once execution safety through write-ahead intent loggin
 
 ## CLI Reference
 
-Run as `python -m daybreak <command>`. Global flags work before or after the command.
+Run as `~/.daybreak/bin/daybreak <command>` (or `python -m daybreak <command>`). Global flags work before or after the command.
 
 | Command | Purpose | Output |
 | :--- | :--- | :--- |

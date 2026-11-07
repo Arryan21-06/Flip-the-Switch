@@ -6,6 +6,23 @@ from .models import Blocked, read_json, write_json
 from .timeutil import zone
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def daybreak_home() -> Path:
+    import os
+    return Path(os.environ.get("DAYBREAK_HOME", Path.home() / ".daybreak")).expanduser()
+
+
+def user_config() -> dict:
+    config_file = daybreak_home() / "config.json"
+    if config_file.exists():
+        try:
+            return read_json(config_file, {}) or {}
+        except Exception:
+            return {}
+    return {}
+
+
 DEFAULTS = {
     "timezone": "Asia/Kolkata",
     "quiet_hours": {"start": "20:00", "end": "09:00", "friday_cutoff": "17:00"},

@@ -94,6 +94,8 @@ In the room chat, test each agent:
 
 Alternatively, verify from the terminal that each agent can reach the toolkit:
 ```bash
+~/.daybreak/bin/daybreak rules show
+# or from the repo root:
 .venv/bin/python -m daybreak rules show
 ```
 

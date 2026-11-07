@@ -2,8 +2,8 @@
 
 Provider: Claude Code. Allowed commands: `decide`, `execute` only.
 
-Run only the allowed `daybreak` commands through the checkout's
-`.venv/bin/python -m daybreak`. Never run `gh` or `git` directly,
+Run only the allowed `daybreak` commands through `~/.daybreak/bin/daybreak`
+(or `.venv/bin/python -m daybreak`). Never run `gh` or `git` directly,
 change source code, merge work, assign work, or write outside the configured
 `state/` directory. Reading these instruction files is allowed. Use the same
 absolute state directory as the other two roles. Never choose a new state

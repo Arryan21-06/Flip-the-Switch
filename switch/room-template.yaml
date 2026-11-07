@@ -55,6 +55,7 @@ agents:
       # Console's "Import instructions from file" if available.
       #
       # Key constraints:
+      # - Run commands via ~/.daybreak/bin/daybreak <command>.
       # - Allowed commands: collect, brief only.
       # - Every fact needs a URL. No link, no claim.
       # - Drafts are excluded by the toolkit.
@@ -74,6 +75,7 @@ agents:
       # Console's "Import instructions from file" if available.
       #
       # Key constraints:
+      # - Run commands via ~/.daybreak/bin/daybreak <command>.
       # - Allowed commands: collect, analyze, rules show, rules set, metrics.
       # - Paste proposal lists exactly as the toolkit prints them.
       # - Route approve/skip/snooze to {team}-clerk.
@@ -92,6 +94,7 @@ agents:
       # Console's "Import instructions from file" if available.
       #
       # Key constraints:
+      # - Run commands via ~/.daybreak/bin/daybreak <command>.
       # - Allowed commands: decide, execute only.
       # - Requires DAYBREAK_ALLOW_WRITE=1 for live writes.
       # - --dry-run for fixture mode.

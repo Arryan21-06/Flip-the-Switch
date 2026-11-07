@@ -24,4 +24,34 @@ if [[ -d "/Applications/Switch Console.app" ]] || command -v switch-console >/de
 else
   echo "Switch Console: not detected; see switch/NOTES.md"
 fi
+REPO_DIR="$(pwd -P)"
+DAYBREAK_HOME="${DAYBREAK_HOME:-$HOME/.daybreak}"
+mkdir -p "$DAYBREAK_HOME/bin"
+
+CONFIG_FILE="$DAYBREAK_HOME/config.json"
+if [[ -f "$CONFIG_FILE" ]]; then
+  cp "$CONFIG_FILE" "${CONFIG_FILE}.bak"
+  echo "Existing config backed up to ${CONFIG_FILE}.bak"
+fi
+
+cat > "$CONFIG_FILE" << EOF
+{
+  "state_dir": "$REPO_DIR/state",
+  "fixture": "$REPO_DIR/fixtures/snapshot_tuesday.json",
+  "source": "fixture",
+  "repo": ""
+}
+EOF
+
+WRAPPER="$DAYBREAK_HOME/bin/daybreak"
+cat > "$WRAPPER" << EOF
+#!/usr/bin/env bash
+set -euo pipefail
+export PYTHONPATH="$REPO_DIR:\${PYTHONPATH:-}"
+exec "$REPO_DIR/.venv/bin/python" -m daybreak "\$@"
+EOF
+chmod +x "$WRAPPER"
+
+echo "Configured: $CONFIG_FILE"
+echo "Installed wrapper: $WRAPPER"
 echo "Ready: make test && make demo (fixture demo needs no GitHub or Switch)"
