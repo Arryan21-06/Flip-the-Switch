@@ -31,3 +31,4 @@ export const AnimatedList: React.FC<AnimatedListProps> = ({
     </div>
   );
 };
+

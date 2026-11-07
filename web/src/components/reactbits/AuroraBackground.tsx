@@ -24,3 +24,4 @@ export const AuroraBackground: React.FC<AuroraBackgroundProps> = ({
     </div>
   );
 };
+

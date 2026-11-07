@@ -42,3 +42,4 @@ export const Magnet: React.FC<MagnetProps> = ({
     </div>
   );
 };
+

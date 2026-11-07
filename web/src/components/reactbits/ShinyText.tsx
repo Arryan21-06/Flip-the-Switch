@@ -28,3 +28,4 @@ export const ShinyText: React.FC<ShinyTextProps> = ({
     </span>
   );
 };
+

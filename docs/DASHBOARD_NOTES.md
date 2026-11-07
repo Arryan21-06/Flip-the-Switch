@@ -70,3 +70,4 @@ Daybreak Cockpit operates in two interchangeable modes behind a single unified i
   - `web/server/server.py`: Verified with curl and urllib; `/api/health` returns 200, POST requests return 405.
 - **Unverified**:
   - Switch Console GUI (cannot be operated autonomously; manual verification checklist in `docs/SWITCH_SETUP.md`).
+
