@@ -138,11 +138,17 @@ This automatically creates:
 - **PR C**: Workload filler PR by the same account.
 
 ### 2. Lower Detection Thresholds
-Temporarily lower the thresholds for the demo session:
+Temporarily adjust the thresholds for the demo session:
 ```bash
 python -m daybreak rules set early_warning.grace_hours 0 --by lead
 python -m daybreak rules set early_warning.workload_open_prs 2 --by lead
+# Cap to 1 warning proposal so only PR B (High) is proposed:
+python -m daybreak rules set limits.max_warning_proposals 1 --by lead
 ```
+
+> [!NOTE]
+> **Why cap to 1 warning proposal?**
+> Because PR A, PR B, and PR C are all authored by the same account and have zero reviewers requested, both PR A and PR C qualify as `At risk` (2 signals: `no_reviewer` + `workload`, 40 points). Setting `limits.max_warning_proposals 1` cleanly limits the proposal batch to the single highest-priority item (PR B, High, 65 points), while PR A and PR C are reported under `suppressed_by_cap`.
 
 ### 3. Collect and Analyze
 ```bash
@@ -150,11 +156,20 @@ python -m daybreak collect --source github
 python -m daybreak brief
 python -m daybreak analyze
 ```
-**Expected Output**:
-PR B is immediately detected as **HIGH flag (3 signals, 65 points)**:
-1. No reviewer requested (grace period 0h satisfied).
-2. Author has 2 other open PRs (workload threshold 2 satisfied).
-3. Depends on #A (open PR dependency satisfied).
+**ACTUAL Expected Output**:
+```text
+Early warning (1)
+1. PR #B HIGH flag (3 signals, 65 points) https://github.com/.../pull/B
+   - No reviewer requested, open ...h https://github.com/.../pull/B
+   - Author has 2 other open PRs; includes #A https://github.com/.../pull/A
+   - Author has 2 other open PRs; includes #C https://github.com/.../pull/C
+   - Depends on #A, still open https://github.com/.../pull/A
+   Action: request review from @collaborator https://github.com/.../pull/B
+   Action: comment on #A: Hi @author, PR #B depends on this item. Could you share an ETA? https://github.com/.../pull/B https://github.com/.../pull/A
+
+Reply: approve 1 | skip 1 | snooze 1 2d
+```
+*(Note on reviewers: if `rules.reviewers` has an eligible collaborator other than the author, a `request_review` action is created; if `rules.reviewers` has no eligible collaborator, only the comment on #A is generated with no crash).*
 
 ### 4. Approve and Execute
 ```bash
