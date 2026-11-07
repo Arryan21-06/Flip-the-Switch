@@ -12,8 +12,9 @@ Daybreak is a standup-zero workflow automation system built for engineering team
 - **Chat Surface**: Mattermost (bundled with Switch)
 - **Agent Models**: Claude Code (Scribe, Clerk), Codex / OpenCode (Sentinel)
 - **Core Engine**: Python 3.11+ (Standard Library only, zero external runtime dependencies)
+- **Companion Dashboard**: Daybreak Cockpit (Vite, React 18, TypeScript, Tailwind CSS, strictly read-only companion UI)
 - **Upstream Data & Actions**: GitHub via `gh` CLI and deterministic offline JSON fixtures
-- **Testing**: pytest (76+ automated tests passing hermetically)
+- **Testing**: pytest (87 automated hermetic tests) + Vitest (10 web unit tests)
 
 ## How Switch is Used
 
@@ -25,5 +26,5 @@ Daybreak is a standup-zero workflow automation system built for engineering team
 
 ## Submission Links
 
-- **Repository**: [https://github.com/aditya1981/Flip-the-Switch](https://github.com/aditya1981/Flip-the-Switch)
+- **Repository**: [https://github.com/Arryan21-06/Flip-the-Switch](https://github.com/Arryan21-06/Flip-the-Switch) (also mirrored at [aditya1981/Flip-the-Switch](https://github.com/aditya1981/Flip-the-Switch))
 - **Demo Video (3 Minutes)**: `[INSERT DEMO VIDEO LINK HERE]`
