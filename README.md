@@ -118,6 +118,31 @@ make demo         # Complete pipeline on seeded scenarios — no GitHub, no writ
 
 ---
 
+## Daybreak Cockpit (Read-Only Companion Dashboard)
+
+Daybreak Cockpit is a companion web dashboard located in `web/` that provides real-time visibility into Standup Zero briefings, proposals, active rules, cryptographic audit trails, and engineering impact metrics.
+
+### Key Guarantees
+- **Strictly Read-Only**: The cockpit never initiates writes or approvals directly. Decision cards provide one-click **"Copy chat command"** buttons (e.g. `approve 1 5`, `skip 2`, `snooze 3 2d`) to paste into the Switch room.
+- **Two Operating Modes**:
+  - **Demo Mode**: 100% client-side static mode bundled with deterministic fixture data (`fixtures/snapshot_tuesday.json`).
+  - **Live Mode**: Read-only inspection of active state via `web/server/server.py` (binds strictly to `127.0.0.1:8765`, method `POST` rejected with 405).
+
+### Running the Dashboard
+```bash
+# Build the static dashboard
+make web-build
+
+# Run the test suite (10 unit tests for data mappers and command generators)
+make web-test
+
+# Start the dashboard and read-only backend
+make web-dev
+# Open http://127.0.0.1:5173
+```
+
+---
+
 ## How a Pending Write is Recovered
 
 Daybreak ensures exactly-once execution safety through write-ahead intent logging and remote marker checks:
