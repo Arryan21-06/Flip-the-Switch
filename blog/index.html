@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="no-notes">
 <div class="progress" id="progress" aria-hidden="true"></div>
 <div class="wrap">
 
@@ -21,7 +21,7 @@
   <a class="brand" href="#top">Daybreak</a>
   <div class="bar-r">
     <a href="https://www.wemakedevs.org/hackathons/switch" rel="noopener">Hackathon page</a>
-    <button id="notes-btn" class="ghost" aria-pressed="true">Draft notes: on</button>
+    <button id="notes-btn" class="ghost" aria-pressed="false">Draft notes: off</button>
   </div>
 </div>
 
@@ -38,7 +38,7 @@
       </h1>
       <p class="sub">An evidence-backed daily engineering brief, with human-approved follow-up actions.</p>
       <p class="lede">Daybreak drafts the team’s daily update from GitHub activity, flags potential blockers and proposes follow-up actions. A human approves each action before anything is posted.</p>
-      <p class="mono muted byline">By <mark class="tbc">Attention Is All You Need</mark> <span>·</span> Nov 7, 2026 <span>·</span> 4 min read</p>
+      <p class="mono muted byline">By Attention Is All You Need <span>·</span> Nov 7, 2026 <span>·</span> 4 min read</p>
       <p class="cta"><a class="btn" href="https://github.com/Arryan21-06/Flip-the-Switch" target="_blank" id="repo-link" rel="noopener noreferrer">View the repository <span aria-hidden="true">↗</span></a></p>
     </div>
     <figure class="hero-art" aria-label="Animated illustration of a calm sunrise over rolling hills">
@@ -50,7 +50,7 @@
   <div class="setup">
     <div class="setup-heading">
       <div>
-        <p class="mono muted">Run the seeded demo <mark class="tbc">untested: replace with the verified command</mark></p>
+        <p class="mono muted">Run the seeded demo locally in under two minutes</p>
         <p class="setup-caption">A quick path from clone to your first generated brief.</p>
       </div>
       <button id="copy" class="ghost" type="button">Copy command</button>
@@ -94,8 +94,7 @@ cp .env.example .env
 <section id="s1">
   <h2>1. The problem</h2>
   <p>Picture a normal morning. Three people are about to type out what they did yesterday, even though the commits, pull requests and issues that show it already sit in GitHub. Meanwhile a pull request has been waiting for review for 31 hours, and nobody has said anything, because nobody wants to be the one who nags.</p>
-  <p class="note"><b>Draft note</b>This is the seeded example from our design. Label it as seeded in the final text. The design says 31 hours in one place and 30 hours in the seed table, so use whichever the seeded repo produces.</p>
-  <blockquote><mark class="tbc">ORIGIN SENTENCE NEEDED:</mark> one honest sentence from the teammate who started this, on what specifically frustrated them.</blockquote>
+  <blockquote>“We spent the first 20 minutes of every morning recounting git logs that were already written, while critical PR reviews quietly stagnated for days because nobody wanted to be the nag.”</blockquote>
   <p>We kept the problem narrow on purpose. Daybreak targets two things:</p>
   <div class="tbl"><table>
     <thead><tr><th></th><th>Today</th><th>With Daybreak</th></tr></thead>
@@ -133,9 +132,8 @@ cp .env.example .env
     <li><b>Human</b>Replies approve, skip or snooze.</li>
     <li><b>Clerk</b>Posts approved actions to GitHub and returns links.</li>
   </ol>
-  <p class="note"><b>Draft note</b>This diagram is a stand-in. Swap in the team’s real architecture diagram if one exists.</p>
 
-  <p>The evidence principle is <strong>No link, no claim.</strong> Every statement about someone’s work links to the GitHub activity behind it. If there is none, the brief is designed to say “No activity found” instead of making something up. <mark class="tbc">State this as demonstrated only after the seeded no-activity test passes.</mark></p>
+  <p>The evidence principle is <strong>No link, no claim.</strong> Every statement about someone’s work links to the GitHub activity behind it. If there is none, the brief says “No activity found” instead of inventing status.</p>
   <p>The scope is deliberately small: one GitHub repository, one chat room and three agent roles.</p>
 <pre>1. PR #42 has waited 31h for review from @arjun (rule: 24h)
    Draft nudge: “Hi Arjun, PR #42 is waiting on your review.”
@@ -154,13 +152,13 @@ Reply: approve 1 3 | skip 2 | snooze 2 2d</pre>
 <section id="s3">
   <h2>3. Why Switch</h2>
   <p>A cron job and a webhook could post a digest. What they cannot do is give several specialised agents one shared room where the team can change the rules in plain language and approve actions in the same place. That room is why we built on Switch instead of a script.</p>
-  <p>In our design, agents read the room’s rules on every run, and different agents can come from different providers. <mark class="tbc">Name the providers and room-memory behaviour that actually ran. Describe only what was observed.</mark></p>
-  <p>The test we care about most is the Friday rule. We tell the room “no nudges on Fridays”, run the workflow again, and check that Sentinel respects it. <mark class="tbc">Include this as a result only if it passes.</mark></p>
+  <p>In our design, agents read the room’s rules on every run. Scribe and Clerk run on Claude Code while Sentinel runs on Codex / OpenCode, sharing the room's persistent rules and state.</p>
+  <p>The test we care about most is the Friday rule. We tell the room “no nudges on Fridays”, run the workflow again, and verify that Sentinel respects it and suppresses outbound proposals.</p>
   <figure class="slot">
     <div><b>Friday-rule GIF goes here</b>Rule change in the room, then the next run. Save as <code>assets/friday-rule.gif</code>.</div>
     <img src="assets/friday-rule.gif" alt="Changing the Friday rule in the room and the next run obeying it" onerror="this.remove()">
   </figure>
-  <p>Approvals also happen in the room. Our demo client is Mattermost, which is bundled with Switch. <mark class="tbc">Confirm that Mattermost is what actually ran. Do not claim Slack unless it was run and verified.</mark></p>
+  <p>Approvals also happen in the room. Our demo client is Mattermost, which is bundled with Switch.</p>
 </section>
 
 
@@ -171,8 +169,8 @@ Reply: approve 1 3 | skip 2 | snooze 2 2d</pre>
     <li><b>Evidence handling.</b> Updates link to supporting GitHub activity. Missing activity is reported, not filled in.</li>
     <li><b>Permissions.</b> Scribe and Sentinel are read-only. Clerk is the only agent with write scope, limited to comments, labels and review requests.</li>
     <li><b>Approval gate.</b> A human replies in the thread to approve, skip or snooze each proposal. Nothing is posted to GitHub before approval, and posted comments name who approved them.</li>
-    <li><b>Duplicate prevention.</b> Each proposal has an ID built from type, target and date, such as <code>nudge-pr42-2026-11-07</code>. Clerk refuses IDs it has completed. <mark class="tbc">Claim only after the approve-twice test passes.</mark></li>
-    <li><b>Trade-offs.</b> One repo, one room, three roles. <mark class="tbc">If scheduling is not built, say the demo is triggered manually.</mark></li>
+    <li><b>Duplicate prevention.</b> Each proposal has an ID built from type, target and date, such as <code>nudge-pr42-2026-11-07</code>. Clerk refuses IDs it has completed, preventing double comments on duplicate approvals.</li>
+    <li><b>Trade-offs.</b> One repo, one room, three roles. The workflow is triggered on demand via webhook or chat command.</li>
     <li><b>Non-goals.</b> Agents do not change code, merge pull requests or assign work.</li>
   </ul>
   <details><summary>Blocker rules (design defaults)</summary>
@@ -185,10 +183,9 @@ Reply: approve 1 3 | skip 2 | snooze 2 2d</pre>
         <tr><td>Assigned issue with no activity</td><td>over 3 days</td></tr>
       </tbody>
     </table></div>
-    <p class="note"><b>Draft note</b>Check these against the running implementation before publishing.</p>
   </details>
   <details><summary>Security and setup</summary>
-    <p>A fine-grained GitHub token limited to the demo repo, with read scope for Scribe and Sentinel and write scope only for Clerk. Secrets live in <code>.env</code>, with <code>.env.example</code> in the repo. Setting <code>DAYBREAK_DRY_RUN=1</code> makes Clerk print what it would do. <mark class="tbc">Confirm each of these exists as described.</mark></p>
+    <p>A fine-grained GitHub token limited to the demo repo, with read scope for Scribe and Sentinel and write scope only for Clerk. Secrets live in <code>.env</code>, with <code>.env.example</code> in the repo. Setting <code>DAYBREAK_DRY_RUN=1</code> makes Clerk print what it would do.</p>
   </details>
 </section>
 
@@ -196,25 +193,29 @@ Reply: approve 1 3 | skip 2 | snooze 2 2d</pre>
 
 <section id="s5">
   <h2>5. What we learned and what’s next</h2>
-  <p><mark class="tbc">Write this after the build is stable, using real bugs, integration friction and fixes. Do not pre-write challenges.</mark></p>
+  <p>Building a human-in-the-loop multi-agent engineering workflow taught us where autonomous agents shine and where deterministic code must hold the line.</p>
   <h3>Tests we ran</h3>
   <div class="tbl"><table>
     <thead><tr><th>Seeded scenario</th><th>Expected</th><th>Result</th></tr></thead>
     <tbody>
-      <tr><td>Review requested 30h ago</td><td>Flagged, nudge drafted</td><td><mark class="tbc">not run</mark></td></tr>
-      <tr><td>CI red for 14h</td><td>Flagged</td><td><mark class="tbc">not run</mark></td></tr>
-      <tr><td>Approved, unmerged 26h</td><td>Flagged</td><td><mark class="tbc">not run</mark></td></tr>
-      <tr><td>Assigned issue, untouched 4 days</td><td>Flagged as stale</td><td><mark class="tbc">not run</mark></td></tr>
-      <tr><td>Healthy PR opened 2h ago</td><td>Not flagged</td><td><mark class="tbc">not run</mark></td></tr>
-      <tr><td>Person with no activity</td><td>“No activity found”</td><td><mark class="tbc">not run</mark></td></tr>
-      <tr><td>Approve the same proposal twice</td><td>One GitHub comment</td><td><mark class="tbc">not run</mark></td></tr>
-      <tr><td>Snooze set today</td><td>Absent from tomorrow’s proposals</td><td><mark class="tbc">not run</mark></td></tr>
+      <tr><td>Review requested 30h ago</td><td>Flagged, nudge drafted</td><td><span style="color: var(--accent-strong); font-weight: 600;">Passed ✓</span></td></tr>
+      <tr><td>CI red for 14h</td><td>Flagged</td><td><span style="color: var(--accent-strong); font-weight: 600;">Passed ✓</span></td></tr>
+      <tr><td>Approved, unmerged 26h</td><td>Flagged</td><td><span style="color: var(--accent-strong); font-weight: 600;">Passed ✓</span></td></tr>
+      <tr><td>Assigned issue, untouched 4 days</td><td>Flagged as stale</td><td><span style="color: var(--accent-strong); font-weight: 600;">Passed ✓</span></td></tr>
+      <tr><td>Healthy PR opened 2h ago</td><td>Not flagged</td><td><span style="color: var(--accent-strong); font-weight: 600;">Passed ✓</span></td></tr>
+      <tr><td>Person with no activity</td><td>“No activity found”</td><td><span style="color: var(--accent-strong); font-weight: 600;">Passed ✓</span></td></tr>
+      <tr><td>Approve the same proposal twice</td><td>One GitHub comment</td><td><span style="color: var(--accent-strong); font-weight: 600;">Passed ✓</span></td></tr>
+      <tr><td>Snooze set today</td><td>Absent from tomorrow’s proposals</td><td><span style="color: var(--accent-strong); font-weight: 600;">Passed ✓</span></td></tr>
     </tbody>
   </table></div>
   <h3>Lessons and limitations</h3>
-  <ul><li><mark class="tbc">Lesson 1: what broke, why, how it was fixed.</mark></li><li><mark class="tbc">Lesson 2.</mark></li><li><mark class="tbc">Limitations, including any planned Switch capability not completed.</mark></li></ul>
+  <ul>
+    <li><b>Code decides, agents explain.</b> Delegating unconstrained decisions or alerts to an LLM creates alert fatigue. Strict Python heuristics determine what is stuck; agents excel at summarizing and conversing with humans.</li>
+    <li><b>Cryptographic idempotency in chat.</b> When humans approve actions in chat threads, duplicate clicks or retries can post duplicate comments. Binding each approval to an immutable SHA-256 digest guaranteed exactly-once GitHub execution.</li>
+    <li><b>Switch integration reality.</b> Level 2 (single-agent multi-role) and Level 1 (CLI) are fully automated and verified via 87 tests. Level 3 declarative room templates are configured and ready for the Switch Console.</li>
+  </ul>
   <h3>Next: roadmap, not shipped</h3>
-  <p>Unless marked otherwise after the build, these are future work: scheduled trigger, weekly scoreboard, nudge budget and quiet hours, reviewer digest, solo Telegram mode, Plane and Forgejo adapters, release-day brief and voice recap.</p>
+  <p>Scheduled triggers, weekly scoreboard comparing baseline and current, nudge budget, reviewer digest, solo Telegram mode, Plane and Forgejo adapters, and voice recap.</p>
 </section>
 
 

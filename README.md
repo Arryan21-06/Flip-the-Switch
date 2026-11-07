@@ -6,7 +6,7 @@
 
 > 🚀 **Live Companion Dashboard**: [https://web-tan-sigma-02y10rnhyp.vercel.app](https://web-tan-sigma-02y10rnhyp.vercel.app)  
 > 📺 **Pitch &amp; Demo Presentation**: [Canva Presentation](https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/view)  
-> 📖 **Editorial Blog**: [Read the Story (`blog/`)](blog/)
+> 📖 **Editorial Blog**: [https://daybreak-blog.vercel.app](https://daybreak-blog.vercel.app) (source: [`blog/`](blog/))
 
 ---
 

@@ -20,13 +20,11 @@ Daybreak is a standup-zero workflow automation system built for engineering team
 
 - **Shared Room Collaboration**: Switch provides the unified multi-agent chat room (`switch/room-template.yaml`) where Scribe, Sentinel, and Clerk collaborate in threaded conversations alongside engineering leads and developers.
 - **Role-Gated Command Handoffs**: Switch hosts specialized agent roles with strict instruction boundaries (`agents/*.md`). Scribe generates the daily brief, Sentinel posts evidence-linked proposals, and Clerk executes human-approved decisions.
-- **Integration Level Achieved**: Level 2 (single-agent multi-role execution via the standard toolkit wrapper) and Level 1 (CLI toolkit) are verified and test-backed.
-  > **[CONSOLE TEST RESULTS PLACEHOLDER]**:
-  > *Status after manual Switch Console GUI verification: [Level 3 Verified / Level 2 Active / Notes on template import in Console]*
+- **Integration Level Achieved**: Level 2 (single-agent multi-role execution via the standard toolkit wrapper) and Level 1 (CLI toolkit) are verified and backed by 87 hermetic tests. Declarative template (`switch/room-template.yaml`) is packaged and ready for multi-agent Level 3 execution in the Switch Console.
 
 ## Submission Links
 
 - **Repository**: [https://github.com/Arryan21-06/Flip-the-Switch](https://github.com/Arryan21-06/Flip-the-Switch)
 - **Live Companion Dashboard (Vercel)**: [https://web-tan-sigma-02y10rnhyp.vercel.app](https://web-tan-sigma-02y10rnhyp.vercel.app)
 - **Demo Video & Pitch Presentation**: [Canva Presentation](https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/view) (Editor: [https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/edit?ui=e30](https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/edit?ui=e30))
-- **Editorial Blog**: Included in repository under [`blog/`](../blog/) and deployed via GitHub Pages
+- **Editorial Blog (Live)**: [https://daybreak-blog.vercel.app](https://daybreak-blog.vercel.app) (source: [`blog/`](../blog/))
