@@ -1,0 +1,447 @@
+{
+  "meta": {
+    "repo": "acme/shop",
+    "source": "fixture",
+    "now": "2026-11-10T04:00:00Z"
+  },
+  "prs": [
+    {
+      "number": 41,
+      "title": "Add token refresh",
+      "url": "https://github.com/acme/shop/pull/41",
+      "author": "priya",
+      "state": "merged",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-07T16:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": "2026-11-09T08:00:00Z",
+      "body": "",
+      "review_requests": [],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 42,
+      "title": "Refresh token retries",
+      "url": "https://github.com/acme/shop/pull/42",
+      "author": "priya",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-08T12:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [
+        {
+          "login": "arjun",
+          "requested_at": "2026-11-08T21:00:00Z"
+        }
+      ],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 44,
+      "title": "Work item 44",
+      "url": "https://github.com/acme/shop/pull/44",
+      "author": "priya",
+      "state": "open",
+      "is_draft": true,
+      "labels": [],
+      "created_at": "2026-11-09T16:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 48,
+      "title": "Work item 48",
+      "url": "https://github.com/acme/shop/pull/48",
+      "author": "priya",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-09T18:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [
+        {
+          "login": "meera",
+          "requested_at": "2026-11-09T22:00:00Z"
+        }
+      ],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 45,
+      "title": "Work item 45",
+      "url": "https://github.com/acme/shop/pull/45",
+      "author": "meera",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-09T08:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [
+        {
+          "login": "arjun",
+          "requested_at": "2026-11-09T18:00:00Z"
+        }
+      ],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "FAILURE",
+          "completed_at": "2026-11-09T14:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 39,
+      "title": "Work item 39",
+      "url": "https://github.com/acme/shop/pull/39",
+      "author": "arjun",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-08T02:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [],
+      "reviews": [
+        {
+          "author": "meera",
+          "state": "APPROVED",
+          "submitted_at": "2026-11-09T02:00:00Z"
+        }
+      ],
+      "review_decision": "APPROVED",
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 46,
+      "title": "Work item 46",
+      "url": "https://github.com/acme/shop/pull/46",
+      "author": "lead",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-10T02:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [
+        {
+          "login": "meera",
+          "requested_at": "2026-11-10T02:00:00Z"
+        }
+      ],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 47,
+      "title": "Work item 47",
+      "url": "https://github.com/acme/shop/pull/47",
+      "author": "sam",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-08T22:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [
+        {
+          "login": "arjun",
+          "requested_at": "2026-11-10T01:00:00Z"
+        }
+      ],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 49,
+      "title": "Work item 49",
+      "url": "https://github.com/acme/shop/pull/49",
+      "author": "sam",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-09T00:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [
+        {
+          "login": "meera",
+          "requested_at": "2026-11-10T01:00:00Z"
+        }
+      ],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 50,
+      "title": "Work item 50",
+      "url": "https://github.com/acme/shop/pull/50",
+      "author": "sam",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-09T02:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [
+        {
+          "login": "arjun",
+          "requested_at": "2026-11-10T01:00:00Z"
+        }
+      ],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 52,
+      "title": "Payments integration",
+      "url": "https://github.com/acme/shop/pull/52",
+      "author": "sam",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-09T23:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "Payments integration. Depends on #48.",
+      "review_requests": [],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 53,
+      "title": "Work item 53",
+      "url": "https://github.com/acme/shop/pull/53",
+      "author": "meera",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-10T03:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 54,
+      "title": "Work item 54",
+      "url": "https://github.com/acme/shop/pull/54",
+      "author": "lead",
+      "state": "open",
+      "is_draft": false,
+      "labels": [],
+      "created_at": "2026-11-09T22:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [
+        {
+          "login": "arjun",
+          "requested_at": "2026-11-09T22:00:00Z"
+        }
+      ],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    },
+    {
+      "number": 55,
+      "title": "Work item 55",
+      "url": "https://github.com/acme/shop/pull/55",
+      "author": "lead",
+      "state": "open",
+      "is_draft": true,
+      "labels": [],
+      "created_at": "2026-11-09T20:00:00Z",
+      "updated_at": "2026-11-10T03:00:00Z",
+      "merged_at": null,
+      "body": "",
+      "review_requests": [],
+      "reviews": [],
+      "review_decision": null,
+      "checks": [
+        {
+          "name": "tests",
+          "conclusion": "SUCCESS",
+          "completed_at": "2026-11-10T03:00:00Z"
+        }
+      ]
+    }
+  ],
+  "issues": [
+    {
+      "number": 30,
+      "title": "Update onboarding",
+      "url": "https://github.com/acme/shop/issues/30",
+      "state": "open",
+      "assignees": [
+        "sam"
+      ],
+      "labels": [],
+      "created_at": "2026-11-05T04:00:00Z",
+      "updated_at": "2026-11-06T04:00:00Z"
+    },
+    {
+      "number": 31,
+      "title": "Review docs",
+      "url": "https://github.com/acme/shop/issues/31",
+      "state": "open",
+      "assignees": [
+        "arjun"
+      ],
+      "labels": [],
+      "created_at": "2026-11-09T08:00:00Z",
+      "updated_at": "2026-11-09T18:00:00Z"
+    }
+  ],
+  "commits": [
+    {
+      "sha": "abc001",
+      "author": "priya",
+      "message": "Update 1",
+      "url": "https://github.com/acme/shop/commit/abc001",
+      "date": "2026-11-10T02:00:00Z"
+    },
+    {
+      "sha": "abc002",
+      "author": "priya",
+      "message": "Update 2",
+      "url": "https://github.com/acme/shop/commit/abc002",
+      "date": "2026-11-10T01:00:00Z"
+    },
+    {
+      "sha": "abc003",
+      "author": "priya",
+      "message": "Update 3",
+      "url": "https://github.com/acme/shop/commit/abc003",
+      "date": "2026-11-10T00:00:00Z"
+    },
+    {
+      "sha": "abc004",
+      "author": "arjun",
+      "message": "Update 4",
+      "url": "https://github.com/acme/shop/commit/abc004",
+      "date": "2026-11-09T23:00:00Z"
+    },
+    {
+      "sha": "abc005",
+      "author": "arjun",
+      "message": "Update 5",
+      "url": "https://github.com/acme/shop/commit/abc005",
+      "date": "2026-11-09T22:00:00Z"
+    },
+    {
+      "sha": "abc006",
+      "author": "sam",
+      "message": "Update 6",
+      "url": "https://github.com/acme/shop/commit/abc006",
+      "date": "2026-11-09T21:00:00Z"
+    }
+  ]
+}

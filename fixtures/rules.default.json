@@ -1,0 +1,61 @@
+{
+  "timezone": "Asia/Kolkata",
+  "quiet_hours": {
+    "start": "20:00",
+    "end": "09:00",
+    "friday_cutoff": "17:00"
+  },
+  "stuck": {
+    "review_sla_hours": 24,
+    "red_ci_hours": 12,
+    "approved_unmerged_hours": 24,
+    "stale_issue_days": 3
+  },
+  "early_warning": {
+    "grace_hours": 4,
+    "workload_open_prs": 3,
+    "points": {
+      "no_reviewer": 20,
+      "workload": 20,
+      "dependency": 25
+    }
+  },
+  "limits": {
+    "max_stuck_proposals": 4,
+    "max_warning_proposals": 2,
+    "max_nudges_per_person_per_day": 2
+  },
+  "reviewers": [
+    "arjun",
+    "meera"
+  ],
+  "approvers": [],
+  "team": [
+    {
+      "github": "priya",
+      "chat": "priya",
+      "name": "Priya"
+    },
+    {
+      "github": "arjun",
+      "chat": "arjun",
+      "name": "Arjun"
+    },
+    {
+      "github": "sam",
+      "chat": "sam",
+      "name": "Sam"
+    },
+    {
+      "github": "lead",
+      "chat": "lead",
+      "name": "Lead"
+    },
+    {
+      "github": "meera",
+      "chat": "meera",
+      "name": "Meera"
+    }
+  ],
+  "standup_minutes": 15
+}
