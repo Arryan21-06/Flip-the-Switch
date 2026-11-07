@@ -11,12 +11,14 @@ import { Scoreboard } from './pages/Scoreboard';
 import { HowItWorks } from './pages/HowItWorks';
 import { SystemHealth } from './pages/SystemHealth';
 import { SwitchSimulator } from './pages/SwitchSimulator';
+import { Connectors } from './pages/Connectors';
 
 export const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Shell />}>
         <Route index element={<MissionControl />} />
+        <Route path="connectors" element={<Connectors />} />
         <Route path="brief" element={<MorningBrief />} />
         <Route path="proposals" element={<ProposalsBoard />} />
         <Route path="early-warning" element={<EarlyWarning />} />

@@ -25,14 +25,14 @@
 }
 
 .dark {
-  /* Dark Theme — Deep Ink */
-  --surface-0: #0B0D12;
-  --surface-1: #11141D;
-  --surface-2: #181C26;
-  --surface-3: #202533;
+  /* Switch Console Dark Matte Theme */
+  --surface-0: #0C0D0E;
+  --surface-1: #131415;
+  --surface-2: #18191B;
+  --surface-3: #222427;
 
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-subtle: #242629;
+  --border-strong: #33363A;
 
   --text-primary: #F3F4F6;
   --text-secondary: #9CA3AF;
