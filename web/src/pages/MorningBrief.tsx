@@ -237,13 +237,13 @@ const EvidenceChip: React.FC<EvidenceChipProps> = ({ item }) => {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-start justify-between gap-2 p-2 rounded-lg bg-surface-2/60 hover:bg-surface-2 border border-border/80 hover:border-border-strong text-xs transition-all"
+      className="group flex items-start justify-between gap-2 p-2 rounded-lg bg-surface-2/70 hover:bg-surface-2 border border-border/80 hover:border-accent-amber/40 text-xs transition-all shadow-xs"
     >
       <div className="min-w-0">
-        <span className="font-mono font-semibold text-accent-amber mr-1.5 group-hover:underline">
+        <span className="font-mono font-bold text-accent-amber mr-1.5 group-hover:underline">
           #{item.number}
         </span>
-        <span className="text-text-primary group-hover:text-white transition-colors">
+        <span className="text-text-primary group-hover:text-white transition-colors font-medium">
           {item.title}
         </span>
       </div>

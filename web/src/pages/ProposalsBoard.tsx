@@ -3,13 +3,13 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronUp,
-  Filter,
   Clock,
   AlertTriangle,
   Flame,
   ShieldAlert,
   MessageSquare,
   UserCheck,
+  GitPullRequest,
 } from 'lucide-react';
 import { useDaybreakData, getApproveCommand, getSkipCommand, getSnoozeCommand } from '../data/source';
 import { Proposal, ProposalStatus } from '../types/daybreak';
@@ -46,18 +46,20 @@ export const ProposalsBoard: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-      {/* Header */}
+      {/* ============================================================ */}
+      {/* HEADER                                                       */}
+      {/* ============================================================ */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono text-accent-amber mb-1">
             <ShieldAlert className="h-3.5 w-3.5" />
             <span>STANDUP ZERO · SENTINEL PROPOSALS</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Proposals Board
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
+            Sentinel Proposals Queue
           </h1>
           <p className="text-sm text-text-secondary mt-1">
-            Review nudge and early warning proposals. Decisions are executed strictly through room chat commands.
+            Heuristic stuck items and proactive early warnings awaiting human review.
           </p>
         </div>
 
@@ -67,91 +69,117 @@ export const ProposalsBoard: React.FC = () => {
             command={getApproveCommand(
               proposals.filter((p) => p.status === 'proposed').map((p) => p.index)
             )}
-            label="Copy: approve all proposed"
+            label="Approve All Proposed"
             variant="primary"
           />
         )}
       </div>
 
-      {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-surface-1 border border-border text-xs">
-        <div className="flex items-center gap-1.5 text-text-muted font-medium pr-2 border-r border-border">
-          <Filter className="h-3.5 w-3.5" />
-          <span>Filters:</span>
-        </div>
-
-        {/* Category Filter */}
-        <select
-          value={severityFilter}
-          onChange={(e) => setSeverityFilter(e.target.value)}
-          className="bg-surface-2 text-text-primary px-2.5 py-1.5 rounded-lg border border-border focus:outline-none focus:border-accent-amber"
-        >
-          <option value="all">All Categories ({proposals.length})</option>
-          <option value="stuck">Stuck Items only ({proposals.filter((p) => p.severity === 'stuck').length})</option>
-          <option value="warning">Early Warning only ({proposals.filter((p) => p.severity === 'warning').length})</option>
-        </select>
-
-        {/* Status Filter */}
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-surface-2 text-text-primary px-2.5 py-1.5 rounded-lg border border-border focus:outline-none focus:border-accent-amber"
-        >
-          <option value="all">All Statuses</option>
-          <option value="proposed">Proposed (Pending)</option>
-          <option value="approved">Approved</option>
-          <option value="executed">Executed</option>
-          <option value="skipped">Skipped</option>
-          <option value="snoozed">Snoozed</option>
-        </select>
-
-        {/* Person Filter */}
-        <select
-          value={personFilter}
-          onChange={(e) => setPersonFilter(e.target.value)}
-          className="bg-surface-2 text-text-primary px-2.5 py-1.5 rounded-lg border border-border focus:outline-none focus:border-accent-amber"
-        >
-          <option value="all">All Recipients</option>
-          {people.map((p) => (
-            <option key={p} value={p}>
-              @{p}
-            </option>
-          ))}
-        </select>
-
-        {(statusFilter !== 'all' || severityFilter !== 'all' || personFilter !== 'all') && (
+      {/* ============================================================ */}
+      {/* MODERN TABBED FILTER BAR (Switch Console Style)             */}
+      {/* ============================================================ */}
+      <div className="p-2.5 rounded-xl bg-surface-1 border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+        {/* Category Tabs */}
+        <div className="flex items-center rounded-lg bg-surface-2 p-1 border border-border/80">
           <button
             type="button"
-            onClick={() => {
-              setStatusFilter('all');
-              setSeverityFilter('all');
-              setPersonFilter('all');
-            }}
-            className="text-accent-coral hover:underline ml-auto"
+            onClick={() => setSeverityFilter('all')}
+            className={`px-3 py-1 rounded-md font-medium transition-all ${
+              severityFilter === 'all'
+                ? 'bg-surface-3 text-text-primary font-bold shadow-xs border border-border'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
           >
-            Clear filters
+            All Categories ({proposals.length})
           </button>
-        )}
+          <button
+            type="button"
+            onClick={() => setSeverityFilter('stuck')}
+            className={`px-3 py-1 rounded-md font-medium transition-all ${
+              severityFilter === 'stuck'
+                ? 'bg-surface-3 text-accent-coral font-bold shadow-xs border border-border'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            Stuck ({proposals.filter((p) => p.severity === 'stuck').length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setSeverityFilter('warning')}
+            className={`px-3 py-1 rounded-md font-medium transition-all ${
+              severityFilter === 'warning'
+                ? 'bg-surface-3 text-accent-amber font-bold shadow-xs border border-border'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            Early Warning ({proposals.filter((p) => p.severity === 'warning').length})
+          </button>
+        </div>
+
+        {/* Status & Recipient Dropdowns */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-surface-2 text-text-primary px-3 py-1.5 rounded-lg border border-border text-xs focus:outline-none focus:border-accent-amber"
+          >
+            <option value="all">Status: All</option>
+            <option value="proposed">Proposed (Pending)</option>
+            <option value="approved">Approved</option>
+            <option value="executed">Executed</option>
+            <option value="skipped">Skipped</option>
+            <option value="snoozed">Snoozed</option>
+          </select>
+
+          <select
+            value={personFilter}
+            onChange={(e) => setPersonFilter(e.target.value)}
+            className="bg-surface-2 text-text-primary px-3 py-1.5 rounded-lg border border-border text-xs focus:outline-none focus:border-accent-amber"
+          >
+            <option value="all">Author / Recipient: All</option>
+            {people.map((p) => (
+              <option key={p} value={p}>
+                @{p}
+              </option>
+            ))}
+          </select>
+
+          {(statusFilter !== 'all' || severityFilter !== 'all' || personFilter !== 'all') && (
+            <button
+              type="button"
+              onClick={() => {
+                setStatusFilter('all');
+                setSeverityFilter('all');
+                setPersonFilter('all');
+              }}
+              className="text-xs text-accent-coral hover:underline font-medium px-2"
+            >
+              Reset
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Lanes or Filtered List */}
+      {/* ============================================================ */}
+      {/* 2-LANE PROPOSAL STACK                                        */}
+      {/* ============================================================ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Lane: Stuck Items */}
+        {/* Lane 1: Stuck Items */}
         <div className="space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-border">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-status-warning" />
-              <h2 className="text-base font-bold text-text-primary">Stuck Items</h2>
-              <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-surface-3 text-text-muted">
+              <h2 className="text-base font-bold text-text-primary">Stuck SLA Violations</h2>
+              <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-surface-3 text-text-primary border border-border">
                 {stuckList.length}
               </span>
             </div>
-            <span className="text-[11px] text-text-muted">Over SLA thresholds</span>
+            <span className="text-[11px] text-text-muted">Exceeded configured SLA</span>
           </div>
 
           {stuckList.length === 0 ? (
             <div className="p-8 text-center rounded-xl border border-dashed border-border bg-surface-1/40 text-xs text-text-muted">
-              No stuck items matching the active filters.
+              Zero stuck items matching the current filter.
             </div>
           ) : (
             <div className="space-y-4">
@@ -167,22 +195,22 @@ export const ProposalsBoard: React.FC = () => {
           )}
         </div>
 
-        {/* Right Lane: Early Warning */}
+        {/* Lane 2: Early Warning Signals */}
         <div className="space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-border">
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-accent-coral" />
               <h2 className="text-base font-bold text-text-primary">Early Warning Signals</h2>
-              <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-surface-3 text-text-muted">
+              <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-surface-3 text-text-primary border border-border">
                 {warningList.length}
               </span>
             </div>
-            <span className="text-[11px] text-text-muted">Proactive pre-SLA risk flags</span>
+            <span className="text-[11px] text-text-muted">Pre-SLA stall risks</span>
           </div>
 
           {warningList.length === 0 ? (
             <div className="p-8 text-center rounded-xl border border-dashed border-border bg-surface-1/40 text-xs text-text-muted">
-              No early warning items matching the active filters.
+              Zero early warning items matching the current filter.
             </div>
           ) : (
             <div className="space-y-4">
@@ -199,7 +227,9 @@ export const ProposalsBoard: React.FC = () => {
         </div>
       </div>
 
-      {/* Suppressed Proposals Section */}
+      {/* ============================================================ */}
+      {/* SUPPRESSED PROPOSALS ACCORDION                               */}
+      {/* ============================================================ */}
       {suppressed.length > 0 && (
         <div className="pt-4 border-t border-border">
           <button
@@ -210,21 +240,21 @@ export const ProposalsBoard: React.FC = () => {
             <div className="flex items-center gap-2">
               <Flame className="h-4 w-4 text-text-muted" />
               <span>
-                Suppressed Candidate Items ({suppressed.length}) — withheld by rate limits & rules
+                Rate-Limited & Suppressed Candidates ({suppressed.length})
               </span>
             </div>
             {showSuppressed ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
 
           {showSuppressed && (
-            <div className="mt-3 p-4 rounded-xl bg-surface-1/50 border border-border space-y-2">
+            <div className="mt-2 p-4 rounded-xl bg-surface-1/50 border border-border space-y-2">
               {suppressed.map((item, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between text-xs py-1.5 border-b border-border/40 last:border-0"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-accent-amber">
+                    <span className="font-mono font-bold text-accent-amber">
                       #{item.target.number}
                     </span>
                     <span className="text-text-primary">{item.reason}</span>
@@ -270,7 +300,7 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
       case 'failed':
         return 'bg-status-danger/15 text-status-danger border-status-danger/30';
       default:
-        return 'bg-surface-3 text-text-muted';
+        return 'bg-surface-3 text-text-muted border-border';
     }
   };
 
@@ -289,12 +319,12 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
   };
 
   return (
-    <SpotlightCard className="p-4 rounded-xl flex flex-col justify-between gap-3">
+    <SpotlightCard className="p-4 rounded-xl border border-border/80 hover:border-border-strong flex flex-col justify-between gap-3 shadow-xs">
       {/* Top row */}
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded font-mono text-xs font-bold bg-surface-3 text-text-primary border border-border">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="px-2 py-0.5 rounded font-mono text-xs font-black bg-surface-3 text-text-primary border border-border">
               #{p.index}
             </span>
             {p.tier && (
@@ -303,11 +333,11 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
                   p.tier
                 )}`}
               >
-                {p.tier} ({p.points} pts)
+                {p.tier} ({p.points} PTS)
               </span>
             )}
             <span
-              className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded border ${getStatusBadge(
+              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${getStatusBadge(
                 p.status
               )}`}
             >
@@ -317,8 +347,8 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
 
           <div className="flex items-center gap-2">
             {p.over_hours && (
-              <span className="text-[11px] font-mono text-accent-coral">
-                +{p.over_hours}h over SLA
+              <span className="text-[11px] font-mono text-accent-coral font-bold">
+                +{p.over_hours}h SLA
               </span>
             )}
             <span className="text-xs font-mono text-text-muted">@{p.person}</span>
@@ -332,16 +362,17 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
               href={p.target.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:underline flex items-center gap-1 font-semibold"
+              className="hover:underline flex items-center gap-1 font-bold text-accent-amber"
             >
+              <GitPullRequest className="h-3 w-3" />
               <span>
                 {p.target.kind.toUpperCase()} #{p.target.number}
               </span>
-              <ExternalLink className="h-3 w-3" />
+              <ExternalLink className="h-2.5 w-2.5 opacity-70" />
             </a>
             <span className="text-text-muted">· {p.type.replace('_', ' ')}</span>
           </div>
-          <p className="text-sm font-medium text-text-primary leading-snug">{p.summary}</p>
+          <p className="text-sm font-semibold text-text-primary leading-snug">{p.summary}</p>
         </div>
 
         {/* Reasons */}
@@ -353,7 +384,7 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
                 href={r.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:underline text-text-muted hover:text-text-primary transition-colors"
+                className="hover:underline text-text-secondary hover:text-text-primary transition-colors"
               >
                 {r.text}
               </a>
@@ -363,26 +394,26 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
 
         {/* Actions list */}
         <div className="pt-2 border-t border-border/60">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-text-muted mb-1.5">
-            Proposed Actions ({p.actions.length})
+          <div className="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1.5">
+            Proposed Outbound Actions ({p.actions.length})
           </div>
           <div className="space-y-1">
             {p.actions.map((act, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between text-xs p-2 rounded-lg bg-surface-2/60 border border-border/60"
+                className="flex items-center justify-between text-xs p-2 rounded-lg bg-surface-2/60 border border-border/60 font-mono text-[11px]"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 truncate">
                   {act.kind === 'comment' ? (
-                    <MessageSquare className="h-3.5 w-3.5 text-accent-amber" />
+                    <MessageSquare className="h-3.5 w-3.5 text-accent-amber shrink-0" />
                   ) : (
-                    <UserCheck className="h-3.5 w-3.5 text-accent-coral" />
+                    <UserCheck className="h-3.5 w-3.5 text-accent-coral shrink-0" />
                   )}
-                  <span className="font-mono text-text-primary capitalize">
+                  <span className="text-text-primary capitalize">
                     {act.kind.replace('_', ' ')}
                   </span>
                   <span className="text-text-muted">→</span>
-                  <span className="font-mono text-text-secondary">@{act.person}</span>
+                  <span className="text-accent-amber">@{act.person}</span>
                   <span className="text-text-muted">on #{act.number}</span>
                 </div>
               </div>
@@ -390,7 +421,7 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
           </div>
         </div>
 
-        {/* Drafted Body Collapsible */}
+        {/* Drafted Body Collapsible (styled like GitHub issue comment box) */}
         {p.actions.some((a) => a.body) && (
           <div className="pt-1">
             <button
@@ -398,22 +429,28 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
               onClick={onToggleDraft}
               className="text-xs text-text-muted hover:text-text-primary flex items-center gap-1 font-mono transition-colors"
             >
-              <span>{isExpanded ? 'Hide drafted message' : 'Preview drafted message'}</span>
+              <span>{isExpanded ? 'Hide drafted comment' : 'Inspect drafted comment'}</span>
               {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
             </button>
             {isExpanded && (
-              <div className="mt-2 p-3 rounded-lg bg-surface-0 border border-border text-xs font-mono text-text-secondary whitespace-pre-wrap leading-relaxed shadow-inner">
-                {p.actions.find((a) => a.body)?.body}
+              <div className="mt-2 rounded-lg border border-border overflow-hidden text-xs">
+                <div className="px-3 py-1.5 bg-surface-2/80 border-b border-border flex items-center justify-between text-[11px] text-text-muted font-mono">
+                  <span>Daybreak Comment Preview</span>
+                  <span>&lt;!-- daybreak:{p.id} --&gt;</span>
+                </div>
+                <div className="p-3 bg-surface-0 font-mono text-text-secondary whitespace-pre-wrap leading-relaxed">
+                  {p.actions.find((a) => a.body)?.body}
+                </div>
               </div>
             )}
           </div>
         )}
       </div>
 
-      {/* Decision Buttons (Copy to clipboard for room) */}
+      {/* Decision Command Action Bar */}
       <div className="pt-3 border-t border-border flex items-center justify-between gap-2">
-        <span className="text-[11px] text-text-muted font-sans">
-          Decide in Switch:
+        <span className="text-[11px] font-mono text-text-muted">
+          Decide:
         </span>
         <div className="flex items-center gap-1.5">
           <CopyButton

@@ -36,20 +36,20 @@ export const SwitchSimulator: React.FC = () => {
       id: 'init-2',
       sender: 'scribe',
       senderName: 'Scribe',
-      avatarColor: 'bg-accent-amber',
+      avatarColor: 'bg-accent-amber text-black',
       roleBadge: 'Claude Code · Standup Zero',
       time: '09:30 AM',
       content: (
         <div className="space-y-2 text-xs">
-          <p className="font-semibold text-text-primary">
+          <p className="font-bold text-text-primary">
             🌅 Daybreak standup brief · {data.analysis.meta.repo} · last 24h
           </p>
-          <div className="p-2.5 rounded-lg bg-surface-2 border border-border space-y-1">
+          <div className="p-3 rounded-lg bg-surface-2/80 border border-border space-y-1.5 font-mono text-[11px]">
             <p><strong>@priya:</strong> Merged PR #41 (Token refresh), opened PR #48. Today: PR #42.</p>
             <p><strong>@sam:</strong> Pushed commit abc006, opened PR #52. Today: PR #47, PR #49, PR #50.</p>
             <p><strong>@arjun:</strong> 2 commits pushed. Today: PR #39, Issue #31.</p>
           </div>
-          <p className="text-text-muted italic">
+          <p className="text-text-muted italic text-[11px]">
             Heads-up: proposals are in the thread below. Reply in this thread to approve or edit.
           </p>
         </div>
@@ -59,15 +59,15 @@ export const SwitchSimulator: React.FC = () => {
       id: 'init-3',
       sender: 'sentinel',
       senderName: 'Sentinel',
-      avatarColor: 'bg-accent-coral',
+      avatarColor: 'bg-accent-coral text-white',
       roleBadge: 'Codex · Risk & Heuristics',
       time: '09:30 AM',
       content: (
         <div className="space-y-3 text-xs">
-          <p className="font-semibold text-text-primary">
+          <p className="font-bold text-text-primary">
             🛡️ 4 Stuck items & 1 Early warning flagged:
           </p>
-          <div className="space-y-1.5 font-mono">
+          <div className="space-y-1.5 font-mono text-[11px]">
             <div className="p-2 rounded bg-surface-2 border border-border">
               <span className="text-accent-coral font-bold">[1]</span> Issue #30 stale, 96h since update (limit 72h) @sam
             </div>
@@ -80,11 +80,11 @@ export const SwitchSimulator: React.FC = () => {
             <div className="p-2 rounded bg-surface-2 border border-border">
               <span className="text-accent-coral font-bold">[4]</span> PR #45 CI red for 14h (limit 12h) @meera
             </div>
-            <div className="p-2 rounded bg-accent-coral/10 border border-accent-coral/30 text-accent-coral">
-              <span className="font-bold">[5] HIGH EARLY WARNING</span> PR #52 (65 pts, 3 signals): unassigned reviewer, author has 3 other PRs, depends on open #48
+            <div className="p-2 rounded bg-accent-coral/15 border border-accent-coral/30 text-accent-coral font-semibold">
+              <span className="font-black">[5] HIGH EARLY WARNING</span> PR #52 (65 pts, 3 signals): unassigned reviewer, author has 3 other PRs, depends on open #48
             </div>
           </div>
-          <p className="text-text-muted">
+          <p className="text-text-muted text-[11px]">
             Reply with: <code className="font-mono text-accent-amber font-semibold">approve 2 5</code> · <code className="font-mono text-accent-amber">skip 1</code> · <code className="font-mono text-accent-amber">snooze 3 2d</code>
           </p>
         </div>
@@ -100,7 +100,7 @@ export const SwitchSimulator: React.FC = () => {
       id: `user-${Date.now()}`,
       sender: 'user',
       senderName: 'You (Team Lead)',
-      avatarColor: 'bg-accent-violet',
+      avatarColor: 'bg-accent-violet text-white',
       roleBadge: 'Human Approver',
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       content: <span className="font-mono font-semibold">{trimmed}</span>,
@@ -115,7 +115,7 @@ export const SwitchSimulator: React.FC = () => {
         id: `clerk-${Date.now()}`,
         sender: 'clerk',
         senderName: 'Clerk',
-        avatarColor: 'bg-status-success',
+        avatarColor: 'bg-status-success text-black',
         roleBadge: 'Claude Code · Gatekeeper',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
@@ -138,7 +138,7 @@ export const SwitchSimulator: React.FC = () => {
         id: `clerk-${Date.now()}`,
         sender: 'clerk',
         senderName: 'Clerk',
-        avatarColor: 'bg-status-success',
+        avatarColor: 'bg-status-success text-black',
         roleBadge: 'Claude Code · Gatekeeper',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
@@ -158,7 +158,7 @@ export const SwitchSimulator: React.FC = () => {
         id: `sentinel-${Date.now()}`,
         sender: 'sentinel',
         senderName: 'Sentinel',
-        avatarColor: 'bg-accent-coral',
+        avatarColor: 'bg-accent-coral text-white',
         roleBadge: 'Codex · Risk & Heuristics',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
@@ -177,7 +177,7 @@ export const SwitchSimulator: React.FC = () => {
         id: `sentinel-${Date.now()}`,
         sender: 'sentinel',
         senderName: 'Sentinel',
-        avatarColor: 'bg-accent-coral',
+        avatarColor: 'bg-accent-coral text-white',
         roleBadge: 'Codex · Risk & Heuristics',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
@@ -198,7 +198,7 @@ export const SwitchSimulator: React.FC = () => {
         id: `scribe-${Date.now()}`,
         sender: 'scribe',
         senderName: 'Scribe',
-        avatarColor: 'bg-accent-amber',
+        avatarColor: 'bg-accent-amber text-black',
         roleBadge: 'Claude Code',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         content: (
@@ -224,30 +224,30 @@ export const SwitchSimulator: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-xs font-mono text-accent-amber mb-1">
             <MessageSquare className="h-3.5 w-3.5" />
-            <span>SWITCH AGENTS · LIVE ROOM SIMULATOR</span>
+            <span>SWITCH PLATFORM · LIVE ROOM WORKSPACE</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
             Switch Shared Room Simulator
           </h1>
           <p className="text-sm text-text-secondary mt-1">
-            Experience the multi-agent chat workflow: Scribe drafts, Sentinel flags risks, and Clerk gates executions.
+            Live simulation of the collaborative Switch room: Scribe drafts, Sentinel alerts, and Clerk guards execution.
           </p>
         </div>
 
         <button
           type="button"
           onClick={handleReset}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-2 text-text-secondary hover:text-text-primary border border-border text-xs font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-2 text-text-secondary hover:text-text-primary border border-border text-xs font-medium transition-colors shadow-xs"
         >
           <RotateCcw className="h-3.5 w-3.5" />
-          <span>Reset Thread</span>
+          <span>Reset Room Thread</span>
         </button>
       </div>
 
       {/* Agents Presence Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-        <SpotlightCard className="p-3 flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-accent-violet flex items-center justify-center font-bold text-xs text-white">
+        <SpotlightCard className="p-3 border border-border/80 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-lg bg-accent-violet flex items-center justify-center font-bold text-xs text-white shadow-sm">
             You
           </div>
           <div className="min-w-0">
@@ -256,8 +256,8 @@ export const SwitchSimulator: React.FC = () => {
           </div>
         </SpotlightCard>
 
-        <SpotlightCard className="p-3 flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-accent-amber flex items-center justify-center font-bold text-xs text-black">
+        <SpotlightCard className="p-3 border border-border/80 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-lg bg-accent-amber flex items-center justify-center font-bold text-xs text-black shadow-sm">
             SC
           </div>
           <div className="min-w-0">
@@ -266,8 +266,8 @@ export const SwitchSimulator: React.FC = () => {
           </div>
         </SpotlightCard>
 
-        <SpotlightCard className="p-3 flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-accent-coral flex items-center justify-center font-bold text-xs text-white">
+        <SpotlightCard className="p-3 border border-border/80 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-lg bg-accent-coral flex items-center justify-center font-bold text-xs text-white shadow-sm">
             SE
           </div>
           <div className="min-w-0">
@@ -276,8 +276,8 @@ export const SwitchSimulator: React.FC = () => {
           </div>
         </SpotlightCard>
 
-        <SpotlightCard className="p-3 flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-status-success flex items-center justify-center font-bold text-xs text-black">
+        <SpotlightCard className="p-3 border border-border/80 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-lg bg-status-success flex items-center justify-center font-bold text-xs text-black shadow-sm">
             CL
           </div>
           <div className="min-w-0">
@@ -287,28 +287,37 @@ export const SwitchSimulator: React.FC = () => {
         </SpotlightCard>
       </div>
 
-      {/* Simulated Chat Window */}
+      {/* ============================================================ */}
+      {/* SWITCH CONSOLE DESKTOP WINDOW FRAME                          */}
+      {/* ============================================================ */}
       <SpotlightCard className="p-0 rounded-2xl overflow-hidden border border-border-strong shadow-2xl bg-surface-1">
-        {/* Channel Header */}
-        <div className="px-5 py-3 border-b border-border bg-surface-2/60 flex items-center justify-between">
+        {/* Window Chrome Titlebar */}
+        <div className="px-4 py-2.5 border-b border-border bg-surface-2/80 flex items-center justify-between select-none">
           <div className="flex items-center gap-2">
-            <span className="font-mono font-bold text-sm text-text-primary">#daybreak</span>
-            <span className="text-[11px] text-text-muted">· Switch Room (Mattermost Bridge)</span>
+            <div className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-accent-coral/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-accent-amber/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-status-success/80" />
+            </div>
+            <span className="text-[11px] font-mono text-text-muted ml-2">
+              Switch Console — Room Workspace (#daybreak)
+            </span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-status-success font-mono">
-            <span className="h-2 w-2 rounded-full bg-status-success animate-pulse" />
-            <span>3 Agents Online</span>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-status-success">
+            <span className="h-1.5 w-1.5 rounded-full bg-status-success animate-pulse" />
+            <span className="text-[11px]">Mattermost Bridge Active</span>
           </div>
         </div>
 
-        {/* Message Thread */}
-        <div className="p-5 space-y-5 max-h-[500px] overflow-y-auto">
+        {/* Message Thread Stream */}
+        <div className="p-5 space-y-5 max-h-[520px] overflow-y-auto">
           {messages.map((m) => (
             <div key={m.id} className="flex items-start gap-3.5">
               <div
-                className={`h-8 w-8 rounded-lg shrink-0 flex items-center justify-center font-bold text-xs text-white shadow-sm ${m.avatarColor}`}
+                className={`h-8 w-8 rounded-lg shrink-0 flex items-center justify-center font-bold text-xs shadow-xs ${m.avatarColor}`}
               >
-                {m.sender === 'user' ? 'ME' : m.sender.slice(0, 2).toUpperCase()}
+                {m.sender === 'user' ? 'YOU' : m.sender.slice(0, 2).toUpperCase()}
               </div>
 
               <div className="flex-1 min-w-0 space-y-1">
@@ -317,9 +326,9 @@ export const SwitchSimulator: React.FC = () => {
                   <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-3 text-text-muted border border-border/80">
                     {m.roleBadge}
                   </span>
-                  <span className="text-[10px] text-text-muted">{m.time}</span>
+                  <span className="text-[10px] text-text-muted font-mono">{m.time}</span>
                 </div>
-                <div className="text-sm text-text-secondary leading-relaxed bg-surface-2/30 p-3 rounded-xl border border-border/40">
+                <div className="text-sm text-text-secondary leading-relaxed bg-surface-2/40 p-3 rounded-xl border border-border/60 shadow-xs">
                   {m.content}
                 </div>
               </div>
@@ -327,37 +336,38 @@ export const SwitchSimulator: React.FC = () => {
           ))}
         </div>
 
-        {/* Interactive Quick Action Prompts */}
+        {/* Quick Simulator Commands Bar */}
         <div className="px-5 py-3 border-t border-border bg-surface-2/40 space-y-2">
-          <div className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
-            Quick Simulator Commands (Click to simulate typing)
+          <div className="flex items-center justify-between text-[11px] font-bold text-text-muted uppercase tracking-wider">
+            <span>Quick Room Commands (Click to simulate typing)</span>
+            <span className="font-mono text-[10px] text-accent-amber">Interactive Prompts</span>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => handleCommand('approve 2 5')}
-              className="px-2.5 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono text-accent-amber transition-colors"
+              className="px-3 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono font-semibold text-accent-amber transition-colors shadow-xs"
             >
               approve 2 5
             </button>
             <button
               type="button"
               onClick={() => handleCommand('snooze 3 2d')}
-              className="px-2.5 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono text-text-primary transition-colors"
+              className="px-3 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono font-semibold text-text-primary transition-colors shadow-xs"
             >
               snooze 3 2d
             </button>
             <button
               type="button"
               onClick={() => handleCommand('rules set quiet_hours.friday_cutoff 16:00')}
-              className="px-2.5 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono text-text-primary transition-colors"
+              className="px-3 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono font-semibold text-text-primary transition-colors shadow-xs"
             >
               set friday_cutoff 16:00
             </button>
             <button
               type="button"
               onClick={() => handleCommand('scoreboard')}
-              className="px-2.5 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono text-text-primary transition-colors"
+              className="px-3 py-1 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-xs font-mono font-semibold text-text-primary transition-colors shadow-xs"
             >
               scoreboard
             </button>
@@ -374,14 +384,14 @@ export const SwitchSimulator: React.FC = () => {
         >
           <input
             type="text"
-            placeholder="Type a command in #daybreak (e.g. approve 1 2, snooze 3 2d, scoreboard)..."
+            placeholder="Type a message or command in #daybreak (e.g. approve 1 2, snooze 3 2d, scoreboard)..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 bg-surface-2 px-3.5 py-2 rounded-xl text-xs font-mono text-text-primary placeholder:text-text-muted border border-border focus:outline-none focus:border-accent-amber"
+            className="flex-1 bg-surface-2 px-3.5 py-2.5 rounded-xl text-xs font-mono text-text-primary placeholder:text-text-muted border border-border focus:outline-none focus:border-accent-amber"
           />
           <button
             type="submit"
-            className="px-3.5 py-2 rounded-xl bg-accent-amber text-black font-semibold text-xs flex items-center gap-1.5 hover:bg-amber-400 transition-colors shadow-sm"
+            className="px-4 py-2.5 rounded-xl bg-accent-amber text-black font-bold text-xs flex items-center gap-1.5 hover:bg-amber-400 transition-colors shadow-xs cursor-pointer"
           >
             <Send className="h-3.5 w-3.5" />
             <span>Send</span>
