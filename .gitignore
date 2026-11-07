@@ -13,4 +13,6 @@ build/
 dist/
 web/node_modules/
 web/dist/
+.vercel/
+web/.vercel/
 .DS_Store
