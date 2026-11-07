@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daybreak: Standup Zero for Switch</title>
+<meta name="description" content="An evidence-backed daily engineering brief, with human-approved follow-up actions.">
+<meta name="theme-color" content="#fbfaf6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="wrap">
+
+
+
+<div class="bar">
+  <a class="brand" href="#top">Daybreak</a>
+  <div class="bar-r">
+    <a href="https://www.wemakedevs.org/hackathons/switch" rel="noopener">Hackathon page</a>
+    <button id="notes-btn" class="ghost" aria-pressed="true">Draft notes: on</button>
+  </div>
+</div>
+
+
+
+<header class="hero" id="top">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <p class="mono muted eyebrow">Flip the Switch Hackathon <span>·</span> Track 1: Best Business Workflow</p>
+      <h1>Daybreak: Standup Zero for Switch
+        <button id="theme" class="switch" type="button" role="switch" aria-checked="true" aria-label="Switch to dark theme" title="Press D to switch themes">
+          <span class="switch-knob"><span class="theme-glyph" aria-hidden="true">☀</span></span>
+        </button>
+      </h1>
+      <p class="sub">An evidence-backed daily engineering brief, with human-approved follow-up actions.</p>
+      <p class="lede">Daybreak drafts the team’s daily update from GitHub activity, flags potential blockers and proposes follow-up actions. A human approves each action before anything is posted.</p>
+      <p class="mono muted byline">By <mark class="tbc">Attention Is All You Need</mark> <span>·</span> Nov 7, 2026 <span>·</span> 4 min read</p>
+      <p class="cta"><a class="btn" href="https://github.com/Arryan21-06/Flip-the-Switch" target="_blank" id="repo-link" rel="noopener noreferrer">View the repository <span aria-hidden="true">↗</span></a></p>
+    </div>
+    <figure class="hero-art" aria-label="Animated illustration of a calm sunrise over rolling hills">
+      <img src="assets/daybreak-sunrise.gif" alt="A looping sunrise over soft sage-green hills" width="600" height="420" fetchpriority="high">
+      <figcaption><span class="status-dot" aria-hidden="true"></span> A clearer start to the day</figcaption>
+    </figure>
+  </div>
+
+  <div class="setup">
+    <div class="setup-heading">
+      <div>
+        <p class="mono muted">Run the seeded demo <mark class="tbc">untested: replace with the verified command</mark></p>
+        <p class="setup-caption">A quick path from clone to your first generated brief.</p>
+      </div>
+      <button id="copy" class="ghost" type="button">Copy command</button>
+    </div>
+    <pre id="cmd">git clone https://github.com/Arryan21-06/Flip-the-Switch.git daybreak &amp;&amp; cd daybreak
+cp .env.example .env
+./scripts/setup.sh &amp;&amp; ./scripts/seed_demo.sh
+./scripts/trigger_brief.sh</pre>
+    <span id="copy-status" class="sr-only" aria-live="polite"></span>
+  </div>
+
+  <figure class="slot demo-slot">
+    <div>
+      <b>Pitch &amp; Demo Presentation</b>
+      <span>Watch the Daybreak walkthrough and system architecture presentation on Canva:</span>
+      <p style="margin-top: 12px;"><a class="ghost" href="https://www.canva.com/design/DAHaQhGuVdg/ltR4r17IBqVGrkPweHrGpw/view" target="_blank" rel="noopener noreferrer">View Canva Presentation <span aria-hidden="true">↗</span></a></p>
+    </div>
+    <img src="assets/demo.gif" alt="Daybreak demo: brief, proposal, approval and GitHub result" loading="lazy" onerror="this.remove()">
+  </figure>
+</header>
+
+<div class="ticker" aria-hidden="true"><div><span>No link, no claim</span><span>Scribe drafts</span><span>Sentinel recommends</span><span>Clerk acts only after human approval</span><span>One repo, one room, three agents</span><span>A human approves every action</span><span>No link, no claim</span><span>Scribe drafts</span><span>Sentinel recommends</span><span>Clerk acts only after human approval</span><span>One repo, one room, three agents</span><span>A human approves every action</span></div></div>
+
+
+
+<div class="layout">
+<nav class="rail" aria-label="Sections">
+  <a href="#s1">1 The problem</a>
+  <a href="#s2">2 How Daybreak works</a>
+  <a href="#s3">3 Why Switch</a>
+  <a href="#s4">4 Engineering decisions</a>
+  <a href="#s5">5 What we learned and what’s next</a>
+</nav>
+
+
+
+<article>
+
+
+  
+<section id="s1">
+  <h2>1. The problem</h2>
+  <p>Picture a normal morning. Three people are about to type out what they did yesterday, even though the commits, pull requests and issues that show it already sit in GitHub. Meanwhile a pull request has been waiting for review for 31 hours, and nobody has said anything, because nobody wants to be the one who nags.</p>
+  <p class="note"><b>Draft note</b>This is the seeded example from our design. Label it as seeded in the final text. The design says 31 hours in one place and 30 hours in the seed table, so use whichever the seeded repo produces.</p>
+  <blockquote><mark class="tbc">ORIGIN SENTENCE NEEDED:</mark> one honest sentence from the teammate who started this, on what specifically frustrated them.</blockquote>
+  <p>We kept the problem narrow on purpose. Daybreak targets two things:</p>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Today</th><th>With Daybreak</th></tr></thead>
+    <tbody>
+      <tr><th>Collecting updates</th><td>People write or speak updates by hand, though GitHub already records much of the work.</td><td>Scribe drafts each person’s update from recent GitHub activity, with links to the evidence.</td></tr>
+      <tr><th>Chasing reviews</th><td>A review request waits or CI stays red until someone notices and asks.</td><td>Sentinel flags it against a rule and drafts a nudge. A human decides whether it goes out.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+
+
+<section id="s2">
+  <h2>2. How Daybreak works</h2>
+  <p>Daybreak runs in a shared Switch room, which is the team’s coordination space. Rules, decisions and approvals are meant to live in that conversation. Three agents work in the room:</p>
+  <div class="tbl"><table class="roles">
+    <thead><tr><th>Agent</th><th>Job</th><th>Boundary</th></tr></thead>
+    <tbody>
+      <tr><th>Scribe</th><td>Drafts per-person daily updates from recent GitHub activity and attaches evidence links.</td><td>Read-only. Does not invent work when there is no activity.</td></tr>
+      <tr><th>Sentinel</th><td>Checks for potential blockers and proposes follow-up actions.</td><td>Recommends only. Does not write to GitHub.</td></tr>
+      <tr><th>Clerk</th><td>Carries out approved GitHub comments, labels and review requests, then returns the result links.</td><td>The only write-capable role. Acts only after explicit human approval.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="pull">Scribe drafts, Sentinel recommends, Clerk acts only after human approval.</p>
+
+  <p class="flow-ctl"><button id="play-flow" class="ghost" type="button" aria-controls="workflow">Replay the flow <span aria-hidden="true">↻</span></button></p>
+  <figure class="workflow-visual" aria-label="Animated workflow from GitHub activity through human approval to Clerk">
+    <img src="assets/workflow-pulse.gif" alt="Animated five-step workflow: GitHub, Switch room, agents, human review and Clerk" width="960" height="210" loading="lazy">
+    <figcaption>The sequence at a glance. The numbered steps below explain each hand-off.</figcaption>
+  </figure>
+  <ol class="flow" id="workflow" aria-label="Workflow">
+    <li><b>GitHub</b>Open PRs, issues and commits from the last 24 hours.</li>
+    <li><b>Switch room</b>Rules and decisions that every agent reads.</li>
+    <li><b>Scribe, Sentinel</b>Post the brief, then numbered proposals in the thread.</li>
+    <li><b>Human</b>Replies approve, skip or snooze.</li>
+    <li><b>Clerk</b>Posts approved actions to GitHub and returns links.</li>
+  </ol>
+  <p class="note"><b>Draft note</b>This diagram is a stand-in. Swap in the team’s real architecture diagram if one exists.</p>
+
+  <p>The evidence principle is <strong>No link, no claim.</strong> Every statement about someone’s work links to the GitHub activity behind it. If there is none, the brief is designed to say “No activity found” instead of making something up. <mark class="tbc">State this as demonstrated only after the seeded no-activity test passes.</mark></p>
+  <p>The scope is deliberately small: one GitHub repository, one chat room and three agent roles.</p>
+<pre>1. PR #42 has waited 31h for review from @arjun (rule: 24h)
+   Draft nudge: “Hi Arjun, PR #42 is waiting on your review.”
+   Evidence: &lt;PR link&gt;
+Reply: approve 1 3 | skip 2 | snooze 2 2d</pre>
+  <p class="cap">Proposal format from our design, using seeded data.</p>
+
+  <figure class="slot">
+    <div><b>Screenshots go here</b>Real captures of the daily brief, a Sentinel proposal and a Clerk result. Save as <code>assets/brief.png</code>. Redact secrets and private data.</div>
+    <img src="assets/brief.png" alt="Daily brief with evidence links" onerror="this.remove()">
+  </figure>
+</section>
+
+
+
+<section id="s3">
+  <h2>3. Why Switch</h2>
+  <p>A cron job and a webhook could post a digest. What they cannot do is give several specialised agents one shared room where the team can change the rules in plain language and approve actions in the same place. That room is why we built on Switch instead of a script.</p>
+  <p>In our design, agents read the room’s rules on every run, and different agents can come from different providers. <mark class="tbc">Name the providers and room-memory behaviour that actually ran. Describe only what was observed.</mark></p>
+  <p>The test we care about most is the Friday rule. We tell the room “no nudges on Fridays”, run the workflow again, and check that Sentinel respects it. <mark class="tbc">Include this as a result only if it passes.</mark></p>
+  <figure class="slot">
+    <div><b>Friday-rule GIF goes here</b>Rule change in the room, then the next run. Save as <code>assets/friday-rule.gif</code>.</div>
+    <img src="assets/friday-rule.gif" alt="Changing the Friday rule in the room and the next run obeying it" onerror="this.remove()">
+  </figure>
+  <p>Approvals also happen in the room. Our demo client is Mattermost, which is bundled with Switch. <mark class="tbc">Confirm that Mattermost is what actually ran. Do not claim Slack unless it was run and verified.</mark></p>
+</section>
+
+
+
+<section id="s4">
+  <h2>4. Engineering decisions</h2>
+  <ul class="dec">
+    <li><b>Evidence handling.</b> Updates link to supporting GitHub activity. Missing activity is reported, not filled in.</li>
+    <li><b>Permissions.</b> Scribe and Sentinel are read-only. Clerk is the only agent with write scope, limited to comments, labels and review requests.</li>
+    <li><b>Approval gate.</b> A human replies in the thread to approve, skip or snooze each proposal. Nothing is posted to GitHub before approval, and posted comments name who approved them.</li>
+    <li><b>Duplicate prevention.</b> Each proposal has an ID built from type, target and date, such as <code>nudge-pr42-2026-11-07</code>. Clerk refuses IDs it has completed. <mark class="tbc">Claim only after the approve-twice test passes.</mark></li>
+    <li><b>Trade-offs.</b> One repo, one room, three roles. <mark class="tbc">If scheduling is not built, say the demo is triggered manually.</mark></li>
+    <li><b>Non-goals.</b> Agents do not change code, merge pull requests or assign work.</li>
+  </ul>
+  <details><summary>Blocker rules (design defaults)</summary>
+    <div class="tbl"><table>
+      <thead><tr><th>Condition</th><th>Threshold</th></tr></thead>
+      <tbody>
+        <tr><td>PR waiting for review</td><td>over 24 hours</td></tr>
+        <tr><td>CI red on an open PR</td><td>over 12 hours</td></tr>
+        <tr><td>Approved but unmerged</td><td>over 24 hours</td></tr>
+        <tr><td>Assigned issue with no activity</td><td>over 3 days</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note"><b>Draft note</b>Check these against the running implementation before publishing.</p>
+  </details>
+  <details><summary>Security and setup</summary>
+    <p>A fine-grained GitHub token limited to the demo repo, with read scope for Scribe and Sentinel and write scope only for Clerk. Secrets live in <code>.env</code>, with <code>.env.example</code> in the repo. Setting <code>DAYBREAK_DRY_RUN=1</code> makes Clerk print what it would do. <mark class="tbc">Confirm each of these exists as described.</mark></p>
+  </details>
+</section>
+
+
+
+<section id="s5">
+  <h2>5. What we learned and what’s next</h2>
+  <p><mark class="tbc">Write this after the build is stable, using real bugs, integration friction and fixes. Do not pre-write challenges.</mark></p>
+  <h3>Tests we ran</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Seeded scenario</th><th>Expected</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Review requested 30h ago</td><td>Flagged, nudge drafted</td><td><mark class="tbc">not run</mark></td></tr>
+      <tr><td>CI red for 14h</td><td>Flagged</td><td><mark class="tbc">not run</mark></td></tr>
+      <tr><td>Approved, unmerged 26h</td><td>Flagged</td><td><mark class="tbc">not run</mark></td></tr>
+      <tr><td>Assigned issue, untouched 4 days</td><td>Flagged as stale</td><td><mark class="tbc">not run</mark></td></tr>
+      <tr><td>Healthy PR opened 2h ago</td><td>Not flagged</td><td><mark class="tbc">not run</mark></td></tr>
+      <tr><td>Person with no activity</td><td>“No activity found”</td><td><mark class="tbc">not run</mark></td></tr>
+      <tr><td>Approve the same proposal twice</td><td>One GitHub comment</td><td><mark class="tbc">not run</mark></td></tr>
+      <tr><td>Snooze set today</td><td>Absent from tomorrow’s proposals</td><td><mark class="tbc">not run</mark></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Lessons and limitations</h3>
+  <ul><li><mark class="tbc">Lesson 1: what broke, why, how it was fixed.</mark></li><li><mark class="tbc">Lesson 2.</mark></li><li><mark class="tbc">Limitations, including any planned Switch capability not completed.</mark></li></ul>
+  <h3>Next: roadmap, not shipped</h3>
+  <p>Unless marked otherwise after the build, these are future work: scheduled trigger, weekly scoreboard, nudge budget and quiet hours, reviewer digest, solo Telegram mode, Plane and Forgejo adapters, release-day brief and voice recap.</p>
+</section>
+
+
+
+<section class="end">
+  <h2>Try it</h2>
+  <p>Clone the repo, run the seeded demo and tell us what breaks. <a href="https://github.com/Arryan21-06/Flip-the-Switch" class="repo-a" target="_blank" rel="noopener noreferrer">Repository <span aria-hidden="true">↗</span></a></p>
+  <p class="muted small">Built with <a href="https://docs.switchagents.ai/switch-rooms/getting-started" rel="noopener">Switch</a> for the <a href="https://www.wemakedevs.org/hackathons/switch" rel="noopener">Flip the Switch Hackathon</a> by WeMakeDevs and DevTools Academy. More on <a href="https://www.wemakedevs.org/hackathons/switch/resources" rel="noopener">hackathon resources</a> and the <a href="https://docs.switchagents.ai/" rel="noopener">Switch docs</a>.</p>
+</section>
+
+ 
+
+</article>
+</div>
+</div>
+<button id="top-btn" class="ghost top-btn" type="button" aria-label="Back to top">↑ <span>Back to top</span></button>
+<script src="script.js"></script>
+</body>
+</html>
+
