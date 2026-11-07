@@ -11,6 +11,10 @@ PR_FIELDS = "number,title,url,author,state,isDraft,createdAt,updatedAt,mergedAt,
 def login(value) -> str | None:
     if not isinstance(value, dict):
         return value if isinstance(value, str) else None
+    inner = (value.get("requestedReviewer") or value.get("requested_reviewer") or
+             value.get("requestedTeam") or value.get("requested_team") or value)
+    if isinstance(inner, dict):
+        value = inner
     return value.get("login") or ("team:" + value["slug"] if value.get("slug") else None)
 
 
@@ -18,25 +22,32 @@ def normalize_pr(raw: dict, events: list) -> dict:
     requests = []
     for request in raw.get("reviewRequests") or []:
         who = login(request)
-        matches = [x.get("created_at") for x in events
-                   if x.get("event") == "review_requested" and
-                   login(x.get("requested_reviewer") or x.get("requested_team")) == who
-                   and t.parse(x.get("created_at"))]
+        if not who:
+            continue
+        matches = [x.get("created_at") or x.get("createdAt") for x in events
+                   if isinstance(x, dict) and x.get("event") == "review_requested" and
+                   login(x.get("requested_reviewer") or x.get("requestedReviewer") or
+                         x.get("requested_team") or x.get("requestedTeam")) == who
+                   and t.parse(x.get("created_at") or x.get("createdAt"))]
         requests.append({"login": who, "requested_at": max(matches, key=t.parse) if matches else None})
     checks = []
     for check in raw.get("statusCheckRollup") or []:
+        if not isinstance(check, dict):
+            continue
+        completed = check.get("completedAt") or check.get("createdAt")
         checks.append({"name": check.get("name") or check.get("context"),
                        "conclusion": check.get("conclusion") or check.get("state"),
-                       "completed_at": check.get("completedAt")})
+                       "completed_at": completed})
     return {
         "number": raw.get("number"), "title": raw.get("title"), "url": raw.get("url"),
         "author": login(raw.get("author")), "state": (raw.get("state") or "").lower() or None,
-        "is_draft": raw.get("isDraft"), "labels": [x.get("name") for x in raw.get("labels") or []],
-        "created_at": raw.get("createdAt"), "updated_at": raw.get("updatedAt"),
-        "merged_at": raw.get("mergedAt"), "body": raw.get("body"),
+        "is_draft": raw.get("isDraft"), "labels": [x.get("name") if isinstance(x, dict) else x for x in raw.get("labels") or [] if x],
+        "created_at": raw.get("createdAt") or raw.get("created_at"),
+        "updated_at": raw.get("updatedAt") or raw.get("updated_at"),
+        "merged_at": raw.get("mergedAt") or raw.get("merged_at"), "body": raw.get("body"),
         "review_requests": requests,
         "reviews": [{"author": login(x.get("author")), "state": x.get("state"),
-                     "submitted_at": x.get("submittedAt")} for x in raw.get("reviews") or []],
+                     "submitted_at": x.get("submittedAt") or x.get("submitted_at")} for x in raw.get("reviews") or []],
         "review_decision": raw.get("reviewDecision"), "checks": checks,
     }
 
@@ -72,11 +83,14 @@ def collect(source: str, fixture: Path, repo: str | None, at: str | None,
         "issues": [{"number": x.get("number"), "title": x.get("title"), "url": x.get("url"),
                     "state": (x.get("state") or "").lower() or None,
                     "assignees": [login(a) for a in x.get("assignees") or [] if login(a)],
-                    "labels": [a.get("name") for a in x.get("labels") or []],
-                    "created_at": x.get("createdAt"), "updated_at": x.get("updatedAt")} for x in issues[:100]],
-        "commits": [{"sha": x.get("sha"), "author": login(x.get("author")),
+                    "labels": [a.get("name") if isinstance(a, dict) else a for a in x.get("labels") or [] if a],
+                    "created_at": x.get("createdAt") or x.get("created_at"),
+                    "updated_at": x.get("updatedAt") or x.get("updated_at")} for x in issues[:100]],
+        "commits": [{"sha": x.get("sha"),
+                     "author": login(x.get("author")) or ((x.get("commit") or {}).get("author") or {}).get("name"),
                      "message": ((x.get("commit") or {}).get("message") or "").split("\n")[0],
-                     "url": x.get("html_url"), "date": ((x.get("commit") or {}).get("author") or {}).get("date")} for x in commits],
+                     "url": x.get("html_url") or x.get("url"),
+                     "date": ((x.get("commit") or {}).get("author") or {}).get("date") or x.get("date")} for x in commits],
     })
 
 

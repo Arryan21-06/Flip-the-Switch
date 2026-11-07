@@ -55,8 +55,10 @@ def validate(rules: dict) -> dict:
         elif isinstance(original, int):
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 <= value <= 10000:
                 raise ValueError(f"{key} must be a number from 0 to 10000")
-            if (key.startswith("limits.") or key == "early_warning.workload_open_prs") and (not isinstance(value, int) or value < 1):
+            if key.startswith("limits.") and (not isinstance(value, int) or value < 1):
                 raise ValueError(f"{key} must be an integer from 1 to 10000")
+            if key == "early_warning.workload_open_prs" and (not isinstance(value, int) or value < 0):
+                raise ValueError(f"{key} must be an integer from 0 to 10000")
     return rules
 
 
